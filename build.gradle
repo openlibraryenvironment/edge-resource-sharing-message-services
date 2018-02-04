@@ -1,0 +1,53 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'groovy'
+
+buildscript {
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+  compile group: 'log4j', name: 'log4j', version: '1.2.5'
+  compile group: 'com.k_int', name: 'A2J', version: '1.0.2'
+  compile group: 'com.k_int', name: 'iso10161', version: '1.0'
+  compile group: 'org.codehaus.groovy', name:'groovy-all', version:'2.4.10'
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+}
+
+
+group = 'com.k_int'
+sourceCompatibility = 1.8
+version = '1.0'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart',
+                   'Implementation-Version': version
+    }
+}
+
+// See https://docs.gradle.org/current/userguide/maven_plugin.html#uploading_to_maven_repositories
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://~/.m2/repository/")
+        }
+    }
+}
+
+test {
+    systemProperties 'logback.configurationFile' : new File(projectDir,'src/test/resources/logback-test.xml').absolutePath
+    testLogging {
+        outputs.upToDateWhen {false}
+        showStandardStreams = true
+    }
+}
+
