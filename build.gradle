@@ -7,6 +7,9 @@ buildscript {
     mavenCentral()
     mavenLocal()
   }
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
+  }
 }
 
 repositories {
@@ -15,10 +18,13 @@ repositories {
 }
 
 dependencies {
+
   compile group: 'log4j', name: 'log4j', version: '1.2.5'
   compile group: 'com.k_int', name: 'A2J', version: '1.0.2'
   compile group: 'com.k_int', name: 'iso10161', version: '1.0'
   compile group: 'org.codehaus.groovy', name:'groovy-all', version:'2.4.10'
+  compile group: 'org.springframework.boot', name:'spring-boot-starter', version: '1.5.10.RELEASE'
+
   testCompile 'junit:junit:4.12'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
@@ -27,12 +33,16 @@ dependencies {
 group = 'com.k_int'
 sourceCompatibility = 1.8
 version = '1.0'
+
 jar {
     manifest {
         attributes 'Implementation-Title': 'Gradle Quickstart',
                    'Implementation-Version': version
     }
+    // baseName = 'gs-spring-boot'
+    // version =  '0.1.0'
 }
+
 
 // See https://docs.gradle.org/current/userguide/maven_plugin.html#uploading_to_maven_repositories
 uploadArchives {
