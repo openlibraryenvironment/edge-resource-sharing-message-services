@@ -1,6 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'groovy'
+apply plugin: 'org.springframework.boot'
+
+// Springboot plugin builds a single jar from code and all deps
 
 buildscript {
   repositories {

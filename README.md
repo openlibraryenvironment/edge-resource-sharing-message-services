@@ -76,3 +76,10 @@ about duplicate handling.
 ## ISO10161 Support
 
 ISO10161 Support comes from this project : https://github.com/k-int/iso10161 with base encoding provided via https://github.com/k-int/A2J.
+
+# Running
+
+The gradle file uses the spring boot plugin to build a single jar consisting of all dependencies. The following command will launch the server:
+
+    java -jar build/libs/resource-sharing-message-services-1.0.jar
+
