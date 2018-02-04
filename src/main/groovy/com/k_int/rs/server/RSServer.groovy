@@ -17,7 +17,7 @@ import com.k_int.rs.rabbit.RabbitAdapter;
  *
  * SeeAlso: https://spring.io/guides/gs/spring-boot/
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages="com.k_int")
 public class RSServer implements CommandLineRunner {
 
   private final Logger logger = LoggerFactory.getLogger(RSServer.class);
@@ -35,7 +35,7 @@ public class RSServer implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     logger.debug("RSServer::run");
-    rabbitAdapterService.start();
+    rabbitAdapter.start();
     logger.debug("RSServer::run returning");
   }
 }
