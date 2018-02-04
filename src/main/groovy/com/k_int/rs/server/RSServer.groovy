@@ -6,17 +6,36 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.k_int.rs.rabbit.RabbitAdapter;
+
+/**
+ *
+ * SeeAlso: https://spring.io/guides/gs/spring-boot/
+ */
 @SpringBootApplication
 public class RSServer implements CommandLineRunner {
 
+  private final Logger logger = LoggerFactory.getLogger(RSServer.class);
+
+  @Autowired
+  public RabbitAdapter rabbitAdapter;
+
   public static void main(String[] args) {
+    println("Starting ${args}");
     SpringApplication.run(RSServer.class, args);
+    println("Exiting...");
   }
 
   //access command line arguments
   @Override
   public void run(String... args) throws Exception {
-    println("RSServer::run");
+    logger.debug("RSServer::run");
+    rabbitAdapterService.start();
+    logger.debug("RSServer::run returning");
   }
 }
