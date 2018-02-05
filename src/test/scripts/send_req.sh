@@ -3,6 +3,7 @@
 rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="
 {
   \"header\":{
+    \"protocol\":\"TCP\",
     \"address\":\"localhost\",
     \"port\":499
   },

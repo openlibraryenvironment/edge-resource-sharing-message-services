@@ -20,9 +20,10 @@ import com.k_int.a2j.ProtocolAssociation;
  * SeeAlso: https://spring.io/guides/gs/messaging-rabbitmq/
  */
 @Service
-public class IsoIllTcpSender {
+public class IsoIllTcpSender implements RSMessageSender {
 
   private final Logger logger = LoggerFactory.getLogger(IsoIllTcpSender.class);
+  public static final String TCP = 'TCP';
 
   @PostConstruct
   public void init() {
@@ -41,5 +42,9 @@ public class IsoIllTcpSender {
     // All done, close client
     logger.debug("Close client");
     client.close();
+  }
+
+  public String getProtocol() {
+    return TCP;
   }
 }
