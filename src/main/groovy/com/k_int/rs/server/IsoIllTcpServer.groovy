@@ -38,10 +38,9 @@ public class IsoIllTcpServer {
     ProtocolAssociationObserver pao = new ProtocolAssociationObserver<ILL_APDU_type>() {
         public void notify(ProtocolAssociation pa, ILL_APDU_type apdu) {
           logger.debug("ProtocolAssociationObserver::notify - Incoming ${apdu.which} from ${pa}");
-          synchronized(received_apdus) {
-            received_apdus.add(apdu)
-            received_apdus.notifyAll()
-          }
+          Map received_request = ISO10161ToJsonDataBinder.toJson(apdu);
+          logger.debug("Incoming message as map: ${received_request}");
+
         }
     }
 

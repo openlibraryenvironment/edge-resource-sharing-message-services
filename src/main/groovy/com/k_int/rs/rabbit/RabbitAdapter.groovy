@@ -58,6 +58,11 @@ public class RabbitAdapter implements ApplicationContextAware {
       }
       // If so, call send
 
+      if ( selected_sender ) {
+        logger.debug("Sending");
+        selected_sender.send(parsed_message.header.address, parsed_message.header.port, parsed_message.message);
+      }
+
 
       logger.debug("RabbitAdapter::receiveMessage()");
       logger.debug("Parsed json: ${parsed_message}");
