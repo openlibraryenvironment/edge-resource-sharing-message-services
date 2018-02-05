@@ -39,6 +39,9 @@ public class RSServer implements CommandLineRunner {
   @Autowired
   public RabbitAdapter rabbitAdapter;
 
+  @Autowired
+  public IsoIllTcpServer iso_ill_tcp_server;
+
   final static String queueName = "OutboundMessageQueue";
 
   @Bean
