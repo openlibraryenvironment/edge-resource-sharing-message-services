@@ -23,7 +23,8 @@ public class RabbitAdapter {
 
 
   public void receiveMessage(byte[] message) {
-    logger.debug("RabbitAdapter::receiveMessage() ${message}");
+    String json_payload = new String(message);
+    logger.debug("RabbitAdapter::receiveMessage() ${json_payload}");
   }
 
 }

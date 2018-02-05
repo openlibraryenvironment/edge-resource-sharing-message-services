@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 /**
  *
  * SeeAlso: https://spring.io/guides/gs/spring-boot/
+ * SeeAlso: https://stackoverflow.com/questions/26547532/how-to-shutdown-a-spring-boot-application-in-a-correct-way
  */
 @SpringBootApplication(scanBasePackages="com.k_int")
 public class RSServer implements CommandLineRunner {
