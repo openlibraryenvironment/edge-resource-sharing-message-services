@@ -27,15 +27,15 @@ rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload
 	  \"institution_symbol\":\"ILLTEST-local-002\"
 	}
       },
-      \"transaction_type\":1,
+      \"transaction_type\":\"simple\",
       \"iLL_service_type\":[\"loan\",\"copy-non-returnable\",\"locations\",\"estimate\",\"responder-specific\"],
       \"requester_optional_messages\":{
         \"can_send_RECEIVED\":true,
         \"can_send_RETURNED\":true,
-        \"requester_SHIPPED\":2,
-        \"requester_CHECKED_IN\":2,
+        \"requester_SHIPPED\":\"desires\",
+        \"requester_CHECKED_IN\":\"desires\",
       },
-      \"place_on_hold\": 3,
+      \"place_on_hold\": \"according_to_policy\",
       \"item_id\":{
         \"title\":\"A test title\"
       },
