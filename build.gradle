@@ -27,6 +27,7 @@ dependencies {
   compile group: 'com.k_int', name: 'iso10161', version: '1.0'
   compile group: 'org.codehaus.groovy', name:'groovy-all', version:'2.4.10'
   compile group: 'org.springframework.boot', name:'spring-boot-starter', version: '1.5.10.RELEASE'
+  compile group: 'org.springframework.boot', name:'spring-boot-starter-amqp', version: '1.5.10.RELEASE'
 
   testCompile 'junit:junit:4.12'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'

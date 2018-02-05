@@ -56,11 +56,17 @@ The following helps with setting up topics and queues needed:
     chmod u+rx ./rabbitmqadmin
     ./rabbitmqadmin declare exchange name=RSExchange type=topic
     ./rabbitmqadmin declare queue name=OutboundMessageQueue durable=true
-    ./rabbitmqadmin declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="RSProtocol.#"
+    ./rabbitmqadmin declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="OutViaProtocol.#"
     rabbitmqctl set_permissions rsapp "stomp-subscription-.*" "stomp-subscription-.*" "(RSExchange|stomp-subscription-.*)"
     rabbitmqctl list_exchanges
     rabbitmqctl list_queues
     rabbitmqctl list_bindings
+
+The server application binds to OutboundMessageQueue. Whenever a message is posted to RSExchange with the routing key OutViaProtocol.# where # determines the
+protocol used to send. That message will be picked up
+by the binding and enqued on OutboundMessageQueue for delivery. The Server will dequeue the message and cause the appropriate protocol message to be sent.
+
+When the server application receives an incoming message, it is posted to RSExchange with a topic of MsgRecipient.# where # is the requester symbol.
 
 Client applications may want a durable subscription to receive notifications of incoming messages
     ./rabbitmqadmin declare queue name=MyAppInboundResourceSharingMessageQueue durable=true
@@ -83,3 +89,9 @@ The gradle file uses the spring boot plugin to build a single jar consisting of 
 
     java -jar build/libs/resource-sharing-message-services-1.0.jar
 
+
+# Testing
+
+You can post a message directly to a topic or queue via the command line...
+
+rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="{'json':'document'}"
