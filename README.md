@@ -83,6 +83,10 @@ about duplicate handling.
 
 ISO10161 Support comes from this project : https://github.com/k-int/iso10161 with base encoding provided via https://github.com/k-int/A2J.
 
+# Building
+
+This project is built using gradle 4.3.1, YMMV with other versions.
+
 # Running
 
 The gradle file uses the spring boot plugin to build a single jar consisting of all dependencies. The following command will launch the server:
