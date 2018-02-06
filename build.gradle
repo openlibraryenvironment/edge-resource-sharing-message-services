@@ -75,7 +75,7 @@ test {
  * Generic support for building docker images for SpringBoot Apps
  */
 docker {
-  name 'knowint/resource-sharing-message-services'
+  name 'hub.docker.com/knowint/resource-sharing-message-services:latest'
   files jar.archivePath
   buildArgs(['JAR_FILE':"${jar.archiveName}"])
   dockerfile project.file('src/main/docker/Dockerfile')
