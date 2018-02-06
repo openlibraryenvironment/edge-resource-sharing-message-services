@@ -100,14 +100,22 @@ You can post a message directly to a topic or queue via the command line...
 
 rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="{'json':'document'}"
 
-# Building a docker image::
+# Docker image::
 
 See https://github.com/palantir/gradle-docker
 See https://spring.io/guides/gs/spring-boot-docker/
 See https://stackoverflow.com/questions/37417749/generic-docker-image-and-dockerfile-for-springboot-apps-using-gradle#37417750
 
-run 
+## Build
 
 gradle build docker
 
 to build the docker image
+
+## run
+
+n.b. this is not yet fully working as we need to work out how to pass in the rabbit docker dependency.
+
+docker run -p 8080:8080 -t hub.docker.com/knowint/resource-sharing-message-services:latest
+
+to run the docker image
