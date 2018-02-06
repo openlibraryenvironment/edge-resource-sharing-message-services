@@ -1,19 +1,24 @@
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'groovy'
-apply plugin: 'org.springframework.boot'
-
 // Springboot plugin builds a single jar from code and all deps
 
 buildscript {
   repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
   }
   dependencies {
-    classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE")
+    classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE'
+    classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2'
   }
 }
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'groovy'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.palantir.docker'
 
 repositories {
     mavenCentral()
@@ -69,23 +74,9 @@ test {
 /**
  * Generic support for building docker images for SpringBoot Apps
  */
-task buildDocker(type: Docker, dependsOn: build) {
-  push = false
-  applicationName = rootProject.name
-  dockerfile = file('src/main/docker/Dockerfile')
-
-  doFirst {
-    // Rename the app jar to "app.jar" so that the Dockerfile does not require renames
-    copy {
-      from "${project.buildDir}/libs"
-      into stageDir
-      include "${rootProject.name}-${version}.jar"
-      rename("${rootProject.name}-${version}.jar", "app.jar")
-    }
-  }
-
-  doLast {
-    println "Run the Docker Container"
-    println "docker run -ti -p 8080:8080 $project.group/$applicationName:$version"
-  }
+docker {
+  name 'knowint/resource-sharing-message-services'
+  files jar.archivePath
+  buildArgs(['JAR_FILE':"${jar.archiveName}"])
+  dockerfile project.file('src/main/docker/Dockerfile')
 } 

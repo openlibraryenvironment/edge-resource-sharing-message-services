@@ -98,10 +98,12 @@ rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload
 
 # Building a docker image::
 
+See https://github.com/palantir/gradle-docker
+See https://spring.io/guides/gs/spring-boot-docker/
 See https://stackoverflow.com/questions/37417749/generic-docker-image-and-dockerfile-for-springboot-apps-using-gradle#37417750
 
 run 
 
-gradle buildDocker
+gradle build docker
 
 to build the docker image
