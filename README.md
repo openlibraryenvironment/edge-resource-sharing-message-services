@@ -95,3 +95,13 @@ The gradle file uses the spring boot plugin to build a single jar consisting of 
 You can post a message directly to a topic or queue via the command line...
 
 rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="{'json':'document'}"
+
+# Building a docker image::
+
+See https://stackoverflow.com/questions/37417749/generic-docker-image-and-dockerfile-for-springboot-apps-using-gradle#37417750
+
+run 
+
+gradle buildDocker
+
+to build the docker image
