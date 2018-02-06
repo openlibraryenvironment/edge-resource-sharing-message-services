@@ -50,7 +50,7 @@ be cautious to constrain code using these dependencies to the com.k_int.rs.rabbi
 
 Outbound messages are routed by protocol, inbound messages are routed by target recipient
 
-The following helps with setting up topics and queues needed:
+The following helps with manually setting up topics and queues needed (Tho this should happen on demand in normal use):
 
     wget http://127.0.0.1:15672/cli/rabbitmqadmin
     chmod u+rx ./rabbitmqadmin

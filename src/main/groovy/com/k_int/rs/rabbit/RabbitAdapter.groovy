@@ -10,6 +10,8 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.context.ApplicationContext
 
 import com.k_int.rs.server.RSMessageSender;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
 
 /**
  *
@@ -17,7 +19,7 @@ import com.k_int.rs.server.RSMessageSender;
  * SeeAlso: https://spring.io/guides/gs/messaging-rabbitmq/
  */
 @Service
-public class RabbitAdapter implements ApplicationContextAware {
+public class RabbitAdapter implements ApplicationContextAware, MessageListener {
 
   private final Logger logger = LoggerFactory.getLogger(RabbitAdapter.class);
   private ApplicationContext applicationContext;
@@ -37,8 +39,10 @@ public class RabbitAdapter implements ApplicationContextAware {
    * via routing key OutViaProtocol.#. This means someone is asking us to send a message
    * via a protocol.
    */
-  public void receiveMessage(byte[] message) {
-    String json_payload_as_string = new String(message);
+  public void onMessage(Message message) {
+    String json_payload_as_string = new String(message.getBody());
+
+    logger.debug("onMessage... recv'd routing key: ${message.messageProperties.getReceivedRoutingKey()}");
 
     try {
       def jsonSlurper = new JsonSlurper()

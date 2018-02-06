@@ -20,7 +20,6 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -60,18 +59,12 @@ public class RSServer implements CommandLineRunner {
   }
 
   @Bean
-  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-                                           MessageListenerAdapter listenerAdapter) {
+  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, RabbitAdapter rabbitAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
     container.setQueueNames(queueName);
-    container.setMessageListener(listenerAdapter);
+    container.setMessageListener(rabbitAdapter);
     return container;
-  }
-
-  @Bean
-  MessageListenerAdapter listenerAdapter(com.k_int.rs.rabbit.RabbitAdapter receiver) {
-    return new MessageListenerAdapter(receiver, "receiveMessage");
   }
 
   public static void main(String[] args) {
