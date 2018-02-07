@@ -66,7 +66,7 @@ The server application binds to OutboundMessageQueue. Whenever a message is post
 protocol used to send. That message will be picked up
 by the binding and enqued on OutboundMessageQueue for delivery. The Server will dequeue the message and cause the appropriate protocol message to be sent.
 
-When the server application receives an incoming message, it is posted to RSExchange with a topic of MsgRecipient.# where # is the requester symbol.
+When the server application receives an incoming message, it is posted to RSExchange with a topic of MsgRecipient.# where # is the responder symbol.
 
 Client applications may want a durable subscription to receive notifications of incoming messages
     ./rabbitmqadmin declare queue name=MyAppInboundResourceSharingMessageQueue durable=true
@@ -119,3 +119,18 @@ n.b. this is not yet fully working as we need to work out how to pass in the rab
 docker run -p 8080:8080 -t hub.docker.com/knowint/resource-sharing-message-services:latest
 
 to run the docker image
+
+## Testing Endpoints
+
+ILLTEST-local-001 and ILLTEST-local-002 are used in test/scripts/... as endpoints that should be symbols on LOCALHOST which will recognise and respond
+in predictable ways to the following testing sequences
+
+## Testing sequences
+
+The testing endpoints above look in the requester_note for specific values that can trigger testing sequences. If a symbol is registered as a test symbol, it
+should respond in the following ways
+
+### ILLTEST-CASE-001
+
+Our happy path case - send a request with a title, the server will respond with Shipped
+                                                                                                                  
