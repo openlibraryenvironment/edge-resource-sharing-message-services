@@ -62,7 +62,7 @@ public class RSServer implements CommandLineRunner {
   }
 
   @Bean
-  Binding binding(Queue queue, TopicExchange exchange) {
+  Binding outgoingMessageBinding(Queue queue, TopicExchange exchange) {
     // We need to bind the OutboundMessageQueue to the RSExchange when the routing key is OutViaProtocol.#
     return BindingBuilder.bind(queue).to(exchange).with('OutViaProtocol.#');
   }
