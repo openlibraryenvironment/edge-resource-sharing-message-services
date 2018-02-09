@@ -41,6 +41,8 @@ public class IsoIllTcpServer {
           Map received_request = ISO10161ToJsonDataBinder.toJson(apdu);
           logger.debug("Incoming message as map: ${received_request}");
 
+          // We now need to post the fact that a message has been received to the RSExchange using routingkey
+          // InboundMessage.# where # is the symbol of the partner
         }
     }
 

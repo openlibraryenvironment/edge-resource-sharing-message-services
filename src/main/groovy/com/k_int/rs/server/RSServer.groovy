@@ -42,7 +42,7 @@ public class RSServer implements CommandLineRunner {
   @Autowired
   public IsoIllTcpServer iso_ill_tcp_server;
 
-  final static String queueName = "OutboundMessageQueue";
+  final static String outboundQueueName = "OutboundMessageQueue";
 
    @Bean
    public ConnectionFactory connectionFactory() {
@@ -50,9 +50,9 @@ public class RSServer implements CommandLineRunner {
    }
 
   @Bean
-  Queue queue() {
+  Queue outboundQueue() {
     // OutboundMessageQueue is a durable queue
-    return new Queue(queueName, true);  // name,durable
+    return new Queue(outboundQueueName, true);  // name,durable
   }
 
   @Bean
@@ -62,16 +62,17 @@ public class RSServer implements CommandLineRunner {
   }
 
   @Bean
-  Binding outgoingMessageBinding(Queue queue, TopicExchange exchange) {
-    // We need to bind the OutboundMessageQueue to the RSExchange when the routing key is OutViaProtocol.#
-    return BindingBuilder.bind(queue).to(exchange).with('OutViaProtocol.#');
+  Binding outgoingMessageBinding(Queue outboundQueue, TopicExchange exchange) {
+    // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key OutViaProtocol.#
+    // This means that any time a message is posted with routing key OutViaProtocol.# an entry will be posted to the durable outbountQueue
+    return BindingBuilder.bind(outboundQueue).to(exchange).with('OutViaProtocol.#');
   }
 
   @Bean
   SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, RabbitAdapter rabbitAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(queueName);
+    container.setQueueNames(outboundQueueName);
     container.setMessageListener(rabbitAdapter);
     return container;
   }
