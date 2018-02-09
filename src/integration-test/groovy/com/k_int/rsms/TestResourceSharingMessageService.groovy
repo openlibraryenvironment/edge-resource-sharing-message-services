@@ -20,6 +20,9 @@ class TestResourceSharingMessageService  extends Specification {
 
   final static Logger logger = LoggerFactory.getLogger(TestResourceSharingMessageService.class);
 
+  @Autowired
+  private MockResponder mock_responder;
+
   @Test
   def simpleTest() {
     when:
@@ -28,6 +31,19 @@ class TestResourceSharingMessageService  extends Specification {
       i++;
     expect:
       i==2
+  }
+
+  @Test
+  def testCase001() {
+    setup:
+      logger.debug("get hold of outbound message queue");
+      mock_responder.waitForMockResponder();
+    when:
+      logger.debug("sending request 001 to ILLTEST-local-002");
+    then:
+      logger.debug("Waiting for auto-responder to cause conversation between ILLTEST-local-001 and ILLTEST-local-002");
+    expect:
+      1==1
   }
 }
 
