@@ -32,12 +32,30 @@ class MockResponder {
   private boolean initialised = false;
 
   @Bean
-  Binding incomingMessageQueueBinding(Queue inboundQueue, TopicExchange exchange) {
-    // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key OutViaProtocol.#
-    // This means that any time a message is posted with routing key OutViaProtocol.# an entry will be posted to the durable outbountQueue
-    return BindingBuilder.bind(inboundQueue).to(exchange).with('OutViaProtocol.#');
+  Queue test001Queue() {
+    // A Durable queue that will receive all incoming messages for symbol ILLTEST-local-001
+    return new Queue('test001Queue', true);  // name,durable
   }
 
+  @Bean
+  Queue test002Queue() {
+    // A Durable queue that will receive all incoming messages for symbol ILLTEST-local-002
+    return new Queue('test002Queue', true);  // name,durable
+  }
+
+  @Bean
+  Binding test001Binding(Queue test001Queue, TopicExchange exchange) {
+    // The binding that arranges for message with topic InboundMessage.ILLTEST-local-001 posted to RSExchange
+    // to be added to the durable queue test001Queue
+    return BindingBuilder.bind(test001Queue).to(exchange).with('InboundMessage.ILLTEST-local-001');
+  }
+
+  @Bean
+  Binding test002Binding(Queue test002Queue, TopicExchange exchange) {
+    // The binding that arranges for message with topic InboundMessage.ILLTEST-local-002 posted to RSExchange
+    // to be added to the durable queue test002Queue
+    return BindingBuilder.bind(test002Queue).to(exchange).with('InboundMessage.ILLTEST-local-002');
+  }
 
   @PostConstruct
   public void completeSetup() {
