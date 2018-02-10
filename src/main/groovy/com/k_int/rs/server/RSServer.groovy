@@ -21,9 +21,11 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
 
 
 /**
@@ -42,6 +44,9 @@ public class RSServer implements CommandLineRunner {
   @Autowired
   public IsoIllTcpServer iso_ill_tcp_server;
 
+  @Autowired
+  private RabbitTemplate rabbitTemplate;
+
   final static String outboundQueueName = "OutboundMessageQueue";
 
    @Bean
@@ -51,23 +56,28 @@ public class RSServer implements CommandLineRunner {
 
   @Bean
   Queue outboundQueue() {
-    // OutboundMessageQueue is a durable queue
+    // OutboundMessageQueue is a durable queue where anyone can post a request for an ILL message to
+    // be sebt. 
     return new Queue(outboundQueueName, true);  // name,durable
   }
 
   @Bean
-  TopicExchange exchange() {
+  TopicExchange rsExchange() {
     // RSExchange is the resource sharing exchange
     return new TopicExchange("RSExchange");
   }
 
   @Bean
-  Binding outgoingMessageBinding(Queue outboundQueue, TopicExchange exchange) {
+  Binding outgoingMessageBinding(Queue outboundQueue, TopicExchange rsExchange) {
     // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key OutViaProtocol.#
     // This means that any time a message is posted with routing key OutViaProtocol.# an entry will be posted to the durable outbountQueue
-    return BindingBuilder.bind(outboundQueue).to(exchange).with('OutViaProtocol.#');
+    return BindingBuilder.bind(outboundQueue).to(rsExchange).with('OutViaProtocol.#');
   }
 
+  /*
+   * A message listener -- Listen on the outbound message queue and if a message appears, use the rabbitAdapter
+   * to action that request and send an actual message.
+   */
   @Bean
   SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, RabbitAdapter rabbitAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();

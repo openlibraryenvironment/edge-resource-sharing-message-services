@@ -1,7 +1,9 @@
 package com.k_int.rs.server
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct
@@ -16,6 +18,8 @@ import com.k_int.iso10161.ISO_10161_ILL_1.ILL_APDU_type
 import com.k_int.iso10160.ISO10161DataBinder
 import com.k_int.iso10160.ISO10161ToJsonDataBinder
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
 /**
  *
  *
@@ -25,6 +29,16 @@ import com.k_int.iso10160.ISO10161ToJsonDataBinder
 public class IsoIllTcpServer {
 
   private final Logger logger = LoggerFactory.getLogger(IsoIllTcpServer.class);
+
+  private RabbitTemplate rabbitTemplate;
+
+  /**
+   * Default no-args constructor with rabbit template from spring via @Autowired
+   */
+  @Autowired
+  public IsoIllTcpServer(RabbitTemplate rabbitTemplate) {
+    this.rabbitTemplate = rabbitTemplate;
+  }
 
   @PostConstruct
   public void init() {
@@ -43,6 +57,8 @@ public class IsoIllTcpServer {
 
           // We now need to post the fact that a message has been received to the RSExchange using routingkey
           // InboundMessage.# where # is the symbol of the partner
+          String json_message = JsonOutput.toJson(received_request);
+          rabbitTemplate.convertAndSend('RSExchange', 'InboundMessage.TEST001', json_message);
         }
     }
 
