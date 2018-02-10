@@ -22,10 +22,21 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct
 import groovy.json.JsonSlurper
 
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageListener;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+
+
+
 // @TestPropertySource( locations = "classpath:application-integrationtest.properties")
 
+/**
+ *  Set up an object that will listen for messages passed to 2 symbols : ILLTEST-local-001 and ILLTEST-local-002 and
+ *  respond using prefefined patterns to exercise the various message combinations.
+ */
 @Service
-class MockResponder {
+class MockResponder implements MessageListener {
 
   final static Logger logger = LoggerFactory.getLogger(MockResponder.class);
 
@@ -57,6 +68,18 @@ class MockResponder {
     return BindingBuilder.bind(test002Queue).to(exchange).with('InboundMessage.ILLTEST-local-002');
   }
 
+
+  @Bean
+  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+    // Subscribe to incoming message queues for ILLTEST-local-001 and ILLTEST-local-002
+    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+    container.setConnectionFactory(connectionFactory);
+    container.setQueueNames('test001Queue','test002Queue');
+    container.setMessageListener(this);
+    return container;
+  }
+
+
   @PostConstruct
   public void completeSetup() {
     logger.debug("MockResponder::completeSetup");
@@ -75,5 +98,8 @@ class MockResponder {
     }
   }
 
+  public void onMessage(Message message) {
+    logger.debug("onMessage....");
+  }
 }
 
