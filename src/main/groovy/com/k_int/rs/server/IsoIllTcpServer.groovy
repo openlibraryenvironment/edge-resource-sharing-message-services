@@ -56,15 +56,18 @@ public class IsoIllTcpServer {
           // logger.debug("Incoming message as map: ${received_request}");
 
           if ( received_request.participantInfo ) {
-            logger.debug("Extracted participant info:: ${received_request.participantInfo}");
+            logger.debug("Extracted participant info for incoming message. Posting to InboundMessage.${received_request.participantInfo.recipient.institution_symbol}");
+
+            // We now need to post the fact that a message has been received to the RSExchange using routingkey
+            // InboundMessage.# where # is the symbol of the partner
+            String json_message = groovy.json.JsonOutput.toJson(received_request);
+             
+            // TODO work out symbol of partner org
+            rabbitTemplate.convertAndSend('RSExchange', 'InboundMessage.'+received_request.participantInfo.recipient.institution_symbol, json_message);
           }
-
-          // We now need to post the fact that a message has been received to the RSExchange using routingkey
-          // InboundMessage.# where # is the symbol of the partner
-          String json_message = groovy.json.JsonOutput.toJson(received_request);
-
-          // TODO work out symbol of partner org
-          rabbitTemplate.convertAndSend('RSExchange', 'InboundMessage.TEST001', json_message);
+          else {
+            logger.error("Unable to extract participant info, so no way to route incoming message. ${received_request}");
+          }
         }
     }
 

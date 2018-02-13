@@ -72,13 +72,14 @@ class MockResponder implements MessageListener {
 
 
   @Bean
-  SimpleMessageListenerContainer container(ConnectionFactory connectionFactory) {
+  SimpleMessageListenerContainer mockLocationListener(ConnectionFactory connectionFactory) {
     // Subscribe to incoming message queues for ILLTEST-local-001 and ILLTEST-local-002
-    SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-    container.setConnectionFactory(connectionFactory);
-    container.setQueueNames('test001Queue','test002Queue');
-    container.setMessageListener(this);
-    return container;
+    logger.debug("listening to queue test002Queue");
+    SimpleMessageListenerContainer mockLocationListener = new SimpleMessageListenerContainer();
+    mockLocationListener.setConnectionFactory(connectionFactory);
+    mockLocationListener.setQueueNames('test001Queue', 'test002Queue');
+    mockLocationListener.setMessageListener(this);
+    return mockLocationListener;
   }
 
 
@@ -101,7 +102,7 @@ class MockResponder implements MessageListener {
   }
 
   public void onMessage(Message message) {
-    logger.debug("onMessage.... ${message}");
+    logger.debug("*** MockResponder::onMessage.... ${message}");
   }
 }
 
