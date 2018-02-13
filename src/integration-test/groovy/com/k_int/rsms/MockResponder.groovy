@@ -32,6 +32,10 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 // @TestPropertySource( locations = "classpath:application-integrationtest.properties")
 
 /**
+ *  This class acts in the role of an ILL Application Service Environment (ASE). It listense for
+ *  notifications about incoming messages, and responds as tho it were really responding
+ *  to protocol requests. We use notes to control the test cases and what responses should be sent.
+ *
  *  Set up an object that will listen for messages passed to 2 symbols : ILLTEST-local-001 and ILLTEST-local-002 and
  *  respond using prefefined patterns to exercise the various message combinations.
  */
@@ -41,6 +45,8 @@ class MockResponder implements MessageListener {
   final static Logger logger = LoggerFactory.getLogger(MockResponder.class);
 
   private boolean initialised = false;
+
+  private boolean received_request_tgq_TESTCASE001 = false;
 
   @Bean
   Queue test001Queue() {
@@ -103,6 +109,28 @@ class MockResponder implements MessageListener {
 
   public void onMessage(Message message) {
     logger.debug("*** MockResponder::onMessage.... ${message}");
+    def json_payload_as_string = new String(message.getBody());
+    def jsonSlurper = new JsonSlurper()
+    def parsed_message = jsonSlurper.parseText(json_payload_as_string)
+
+    // Work out which, if any, of our test conditions are met
+    if ( parsed_message.request.transaction_id.transaction_group_qualifier == 'TESTCASE001' ) {
+      logger.debug("Got request with TGQ TESTCASE001");
+      received_request_tgq_TESTCASE001 = true;
+      synchronized(this) {
+        this.notifyAll();
+      }
+    }
+
+  }
+
+  public boolean waitForConversationToComplete() {
+    while ( !received_request_tgq_TESTCASE001 ) {
+      synchronized(this) {
+        this.wait();
+      }
+    }
+    return true;
   }
 }
 

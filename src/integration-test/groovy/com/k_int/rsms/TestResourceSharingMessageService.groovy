@@ -57,7 +57,8 @@ class TestResourceSharingMessageService  extends Specification {
               protocol_version_num:1,
               transaction_id:[
                 // Transaction_Id_type
-                transaction_group_qualifier:java.util.UUID.randomUUID().toString(),
+                // transaction_group_qualifier:java.util.UUID.randomUUID().toString(),
+                transaction_group_qualifier:'TESTCASE001',
                 transaction_qualifier:java.util.UUID.randomUUID().toString(),
               ],
               service_date_time: [
@@ -101,9 +102,8 @@ class TestResourceSharingMessageService  extends Specification {
       rabbitTemplate.convertAndSend('RSExchange', 'OutViaProtocol.TCP', outbound_json );
 
     then:
-      logger.debug("Waiting for auto-responder to cause conversation between ILLTEST-local-001 and ILLTEST-local-002");
-      Thread.sleep(5000);
-      logger.debug("Sleep completed");
+      logger.debug("Waiting for auto-responder conversations to complete");
+      mock_responder.waitForConversationToComplete();
 
     expect:
       1==1
