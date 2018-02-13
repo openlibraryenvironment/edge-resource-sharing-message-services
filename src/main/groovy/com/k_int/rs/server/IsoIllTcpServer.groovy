@@ -53,7 +53,11 @@ public class IsoIllTcpServer {
         public void notify(ProtocolAssociation pa, ILL_APDU_type apdu) {
           logger.debug("ProtocolAssociationObserver::notify - Incoming ${apdu.which} from ${pa}");
           Map received_request = ISO10161ToJsonDataBinder.toJson(apdu);
-          logger.debug("Incoming message as map: ${received_request}");
+          // logger.debug("Incoming message as map: ${received_request}");
+
+          if ( received_request.participantInfo ) {
+            logger.debug("Extracted participant info:: ${received_request.participantInfo}");
+          }
 
           // We now need to post the fact that a message has been received to the RSExchange using routingkey
           // InboundMessage.# where # is the symbol of the partner
