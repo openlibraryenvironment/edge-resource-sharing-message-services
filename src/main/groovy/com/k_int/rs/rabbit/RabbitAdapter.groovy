@@ -54,7 +54,7 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
       // Figure out if anyone supports the transport protocol defined
       com.k_int.rs.server.RSMessageSender selected_sender = null;
       senders.each { k,v ->
-        logger.debug("${v.getProtocol()}==${parsed_message.header.protocol} ?");
+        logger.debug("current protocol ${v.getProtocol()} == requested protocol ${parsed_message.header.protocol} ?");
         if ( v.getProtocol().equals(parsed_message.header.protocol ) ) {
           logger.debug("Matched");
           selected_sender = v;

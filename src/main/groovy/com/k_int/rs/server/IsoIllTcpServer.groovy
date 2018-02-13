@@ -57,7 +57,9 @@ public class IsoIllTcpServer {
 
           // We now need to post the fact that a message has been received to the RSExchange using routingkey
           // InboundMessage.# where # is the symbol of the partner
-          String json_message = JsonOutput.toJson(received_request);
+          String json_message = groovy.json.JsonOutput.toJson(received_request);
+
+          // TODO work out symbol of partner org
           rabbitTemplate.convertAndSend('RSExchange', 'InboundMessage.TEST001', json_message);
         }
     }
