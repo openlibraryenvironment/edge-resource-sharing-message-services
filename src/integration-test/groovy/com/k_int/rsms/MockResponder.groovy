@@ -47,6 +47,7 @@ class MockResponder implements MessageListener {
   private boolean initialised = false;
 
   private boolean received_request_tgq_TESTCASE001 = false;
+  private boolean received_shipped_tgq_TESTCASE001 = true;
 
   @Bean
   Queue test001Queue() {
@@ -117,6 +118,8 @@ class MockResponder implements MessageListener {
     if ( parsed_message.request.transaction_id.transaction_group_qualifier == 'TESTCASE001' ) {
       logger.debug("Got request with TGQ TESTCASE001");
       received_request_tgq_TESTCASE001 = true;
+      // We now need to send a shipped message
+
       synchronized(this) {
         this.notifyAll();
       }
@@ -125,7 +128,11 @@ class MockResponder implements MessageListener {
   }
 
   public boolean waitForConversationToComplete() {
-    while ( !received_request_tgq_TESTCASE001 ) {
+    /*
+     * Conversation is complete when we have received a request as 002 and a shipped as 001
+     */
+    while ( !received_request_tgq_TESTCASE001 &&
+            !received_shipped_tgq_TESTCASE001 ) {
       synchronized(this) {
         this.wait();
       }

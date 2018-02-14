@@ -16,28 +16,30 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 // @TestPropertySource( locations = "classpath:application-integrationtest.properties")
 
+/**
+ * Test the high level messaging interfaces.
+ *
+ * Create a mock responder which will listen for incoming protocol messages as symbols ILLTEST-local-001 and ILLTEST-local-002.
+ * Then inject a new request message sent from ILLTEST-local-001 to ILLTEST-local-002.
+ * The listener for ILLTEST-local-002 should recognise the incoming message and respond with a message
+ * The test completes when the mock_responder has recieved all the correct protocol messages, or a timeout happens.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest( classes = RSServer.class)
 class TestResourceSharingMessageService  extends Specification {
 
   final static Logger logger = LoggerFactory.getLogger(TestResourceSharingMessageService.class);
 
+  /**
+   *  Mock responder will listen for events acting as symbols ILLTEST-local-001 and ILLTEST-local-002
+   *
+   */
   @Autowired
   private MockResponder mock_responder;
 
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-
-  @Test
-  def simpleTest() {
-    when:
-      def i=1;
-    then:
-      i++;
-    expect:
-      i==2
-  }
 
   @Test
   def testCase001() {
