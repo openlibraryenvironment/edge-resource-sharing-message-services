@@ -40,12 +40,23 @@ class TestResourceSharingMessageService  extends Specification {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
+  @Test
+  public void testIntegrationTestConfig() {
+    // integration-test/resources/application.yml has a setting called wibble with value 'This is a test value'
+    // Lets just make sure that we have that config file read and the settings available
+    // assert wibble == 'This is a test value'
+  }
 
   @Test
-  def testCase001() {
+  public void testCase001() {
+
+    def new_guid = 'TESTCASE001'+java.util.UUID.randomUUID().toString();
+
     setup:
       logger.debug("get hold of outbound message queue");
+      mock_responder.setExpectedTGQ(new_guid)
       mock_responder.waitForMockResponder();
+      
     when:
       logger.debug("sending request 001 to ILLTEST-local-002");
       def request = [
@@ -59,8 +70,7 @@ class TestResourceSharingMessageService  extends Specification {
               protocol_version_num:1,
               transaction_id:[
                 // Transaction_Id_type
-                // transaction_group_qualifier:java.util.UUID.randomUUID().toString(),
-                transaction_group_qualifier:'TESTCASE001',
+                transaction_group_qualifier:new_guid,
                 transaction_qualifier:java.util.UUID.randomUUID().toString(),
               ],
               service_date_time: [

@@ -49,6 +49,13 @@ class MockResponder implements MessageListener {
   private boolean received_request_tgq_TESTCASE001 = false;
   private boolean received_shipped_tgq_TESTCASE001 = true;
 
+  private String expected_tgq = null;
+
+  public void setExpectedTGQ(String expected_tgq) {
+    logger.debug("Setting expected TGQ to ${expected_tgq}");
+    this.expected_tgq = expected_tgq;
+  }
+
   @Bean
   Queue test001Queue() {
     // A Durable queue that will receive all incoming messages for symbol ILLTEST-local-001
@@ -115,8 +122,8 @@ class MockResponder implements MessageListener {
     def parsed_message = jsonSlurper.parseText(json_payload_as_string)
 
     // Work out which, if any, of our test conditions are met
-    if ( parsed_message.request.transaction_id.transaction_group_qualifier == 'TESTCASE001' ) {
-      logger.debug("Got request with TGQ TESTCASE001");
+    if ( parsed_message.request.transaction_id.transaction_group_qualifier == expected_tgq ) {
+      logger.debug("Got request with TGQ "+parsed_message.request.transaction_id.transaction_group_qualifier);
       received_request_tgq_TESTCASE001 = true;
       // We now need to send a shipped message
 
@@ -124,6 +131,10 @@ class MockResponder implements MessageListener {
         this.notifyAll();
       }
     }
+    else {
+      logger.debug("onMessage but unable to work out what it is, ${parsed_message.request.transaction_id.transaction_group_qualifier} != ${expected_tgq}");
+    }
+
 
   }
 
@@ -131,12 +142,16 @@ class MockResponder implements MessageListener {
     /*
      * Conversation is complete when we have received a request as 002 and a shipped as 001
      */
-    while ( !received_request_tgq_TESTCASE001 &&
+    while ( !received_request_tgq_TESTCASE001 ||
             !received_shipped_tgq_TESTCASE001 ) {
+      logger.debug("Waiting for ${received_request_tgq_TESTCASE001} and ${received_request_tgq_TESTCASE001}");
       synchronized(this) {
         this.wait();
       }
     }
+
+    logger.debug("All mock conditions met... continue");
+   
     return true;
   }
 }
