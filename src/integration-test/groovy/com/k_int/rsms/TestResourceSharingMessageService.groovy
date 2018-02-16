@@ -19,8 +19,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 /**
  * Test the high level messaging interfaces.
  *
- * Create a mock responder which will listen for incoming protocol messages as symbols ILLTEST-local-001 and ILLTEST-local-002.
- * Then inject a new request message sent from ILLTEST-local-001 to ILLTEST-local-002.
+ * Create a mock responder which will act as an agent and 
+ * listen for incoming protocol messages as symbols ILLTEST-local-001 and ILLTEST-local-002.
+ * Once set up, Inject a new REQUEST message sent as symbol ILLTEST-local-001 to ILLTEST-local-002.
  * The listener for ILLTEST-local-002 should recognise the incoming message and respond with a message
  * The test completes when the mock_responder has recieved all the correct protocol messages, or a timeout happens.
  */
@@ -50,11 +51,15 @@ class TestResourceSharingMessageService  extends Specification {
   @Test
   public void testCase001() {
 
-    def new_guid = 'TESTCASE001'+java.util.UUID.randomUUID().toString();
+    // generate a new Transaction group qualifier. This is what will be used
+    // to make sure this test doesn't pick up messages floating around from any other
+    // test runs. 
+    def new_tgq = 'TESTCASE001'+java.util.UUID.randomUUID().toString();
 
     setup:
       logger.debug("get hold of outbound message queue");
-      mock_responder.setExpectedTGQ(new_guid)
+      // Tell the mock responders
+      mock_responder.setExpectedTGQ(new_tgq)
       mock_responder.waitForMockResponder();
       
     when:
@@ -70,7 +75,7 @@ class TestResourceSharingMessageService  extends Specification {
               protocol_version_num:1,
               transaction_id:[
                 // Transaction_Id_type
-                transaction_group_qualifier:new_guid,
+                transaction_group_qualifier:new_tgq,
                 transaction_qualifier:java.util.UUID.randomUUID().toString(),
               ],
               service_date_time: [
