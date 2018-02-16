@@ -91,7 +91,7 @@ docker {
 sourceSets {
     integrationTest {
         groovy.srcDir file('src/integration-test/groovy')
-        resources.srcDir file('src/iintegration-test/resources')
+        resources.srcDir file('src/integration-test/resources')
         compileClasspath += sourceSets.main.output + configurations.testRuntime
         runtimeClasspath += output + compileClasspath
     }
