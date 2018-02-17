@@ -21,7 +21,12 @@ import com.k_int.iso10160.ISO10161ToJsonDataBinder
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 /**
- *
+ * IsoIllTcpServer.
+ * Listens on a well known port for incoming ISO ILL APDUs. Decodes them and then
+ * posts them to the RabbitMQ RSInboundMessage.<recipient> queue. The expectation is
+ * that someone will be listening for messages for that symbol and action the message
+ * accordingly. Multiple messages may come from a remote source. The iso10161 converters
+ * deal with turning the ASN -> POJO -> Map/Json and also extract the remote party.
  *
  * SeeAlso: https://spring.io/guides/gs/messaging-rabbitmq/
  */
