@@ -42,6 +42,9 @@ class TestResourceSharingMessageService  extends Specification {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
+  /**
+   * test injection of values from integration-test/resources/application.yml
+   */
   @Value('${wibble}')
   private String wibble;
 
@@ -53,7 +56,7 @@ class TestResourceSharingMessageService  extends Specification {
   }
 
   @Test
-  public void testCase001() {
+  public void testSendRequest() {
 
     // generate a new Transaction group qualifier. This is what will be used
     // to make sure this test doesn't pick up messages floating around from any other
