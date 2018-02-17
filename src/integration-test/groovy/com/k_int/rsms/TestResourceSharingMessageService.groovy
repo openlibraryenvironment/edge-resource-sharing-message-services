@@ -9,6 +9,7 @@ import com.k_int.rs.server.RSServer
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -41,11 +42,14 @@ class TestResourceSharingMessageService  extends Specification {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
+  @Value('${wibble}')
+  private String wibble;
+
   @Test
   public void testIntegrationTestConfig() {
     // integration-test/resources/application.yml has a setting called wibble with value 'This is a test value'
     // Lets just make sure that we have that config file read and the settings available
-    // assert wibble == 'This is a test value'
+    assert wibble == 'This is a test value'
   }
 
   @Test
@@ -120,10 +124,10 @@ class TestResourceSharingMessageService  extends Specification {
 
     then:
       logger.debug("Waiting for auto-responder conversations to complete");
-      mock_responder.waitForConversationToComplete();
+      def result = mock_responder.waitForConversationToComplete();
 
     expect:
-      1==1
+      result == true
   }
 }
 
