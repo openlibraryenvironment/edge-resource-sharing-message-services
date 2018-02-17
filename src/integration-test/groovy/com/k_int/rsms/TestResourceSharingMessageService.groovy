@@ -25,6 +25,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
  * Once set up, Inject a new REQUEST message sent as symbol ILLTEST-local-001 to ILLTEST-local-002.
  * The listener for ILLTEST-local-002 should recognise the incoming message and respond with a message
  * The test completes when the mock_responder has recieved all the correct protocol messages, or a timeout happens.
+ *
+ * RSServer - the resource sharing server - is a spring boot application, which we are testing here. Use the SpringBootTest annotation
+ * to do all necessary config
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest( classes = RSServer.class)
