@@ -110,13 +110,21 @@ See https://stackoverflow.com/questions/37417749/generic-docker-image-and-docker
 
 gradle build docker
 
-to build the docker image
+to build the docker image run
+
+    gradle docker
+
+## Publish to dockerhub
+
+Normally published to the knowint user on dockerhub. See ian for credentials. use docker login to log in command line session, then run.
+
+    gradle dockerPush
 
 ## run
 
 n.b. this is not yet fully working as we need to work out how to pass in the rabbit docker dependency.
 
-docker run -p 8080:8080 -t hub.docker.com/knowint/resource-sharing-message-services:latest
+    docker run -p 8080:8080 -t hub.docker.com/knowint/resource-sharing-message-services:latest
 
 to run the docker image
 
