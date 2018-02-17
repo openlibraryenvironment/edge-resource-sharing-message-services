@@ -126,7 +126,7 @@ class TestResourceSharingMessageService  extends Specification {
 
 
       // Put our request on the outbound message queue
-      rabbitTemplate.convertAndSend('RSExchange', 'OutViaProtocol.TCP', outbound_json );
+      rabbitTemplate.convertAndSend('RSExchange', 'RSOutViaProtocol.TCP', outbound_json );
 
     then:
       logger.debug("Waiting for auto-responder conversations to complete");

@@ -47,7 +47,7 @@ public class RSServer implements CommandLineRunner {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-  final static String outboundQueueName = "OutboundMessageQueue";
+  final static String outboundQueueName = "OutboundRSMessageQueue";
 
    @Bean
    public ConnectionFactory connectionFactory() {
@@ -69,9 +69,9 @@ public class RSServer implements CommandLineRunner {
 
   @Bean
   Binding outgoingMessageBinding(Queue outboundQueue, TopicExchange rsExchange) {
-    // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key OutViaProtocol.#
-    // This means that any time a message is posted with routing key OutViaProtocol.# an entry will be posted to the durable outbountQueue
-    return BindingBuilder.bind(outboundQueue).to(rsExchange).with('OutViaProtocol.#');
+    // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key RSOutViaProtocol.#
+    // This means that any time a message is posted with routing key RSOutViaProtocol.# an entry will be posted to the durable outbountQueue
+    return BindingBuilder.bind(outboundQueue).to(rsExchange).with('RSOutViaProtocol.#');
   }
 
   /*
