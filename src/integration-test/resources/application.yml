@@ -1,1 +1,8 @@
 wibble: 'This is a test value'
+
+com:
+  k_int:
+    rabbit:
+      hostname: 'rabbitmq'
+      username: 'adm'
+      password: 'admpass'

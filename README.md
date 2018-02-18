@@ -52,11 +52,13 @@ Outbound messages are routed by protocol, inbound messages are routed by target 
 
 The following helps with manually setting up topics and queues needed (Tho this should happen on demand in normal use):
 
+These commands assume you are managing rabbitmq as a docker dependency 
+    
     wget http://127.0.0.1:15672/cli/rabbitmqadmin
     chmod u+rx ./rabbitmqadmin
-    ./rabbitmqadmin declare exchange name=RSExchange type=topic
-    ./rabbitmqadmin declare queue name=OutboundMessageQueue durable=true
-    ./rabbitmqadmin declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="OutViaProtocol.#"
+    ./rabbitmqadmin  --username=adm --password=admpass declare exchange name=RSExchange type=topic
+    ./rabbitmqadmin  --username=adm --password=admpass declare queue name=OutboundMessageQueue durable=true
+    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="OutViaProtocol.#"
     rabbitmqctl set_permissions rsapp "stomp-subscription-.*" "stomp-subscription-.*" "(RSExchange|stomp-subscription-.*)"
     rabbitmqctl list_exchanges
     rabbitmqctl list_queues
@@ -127,6 +129,27 @@ n.b. this is not yet fully working as we need to work out how to pass in the rab
     docker run -p 8080:8080 -t hub.docker.com/knowint/resource-sharing-message-services:latest
 
 to run the docker image
+
+## RabbitMQ Service Dependency
+
+It is advised to install rabbit via docker to make comms seamless. By default the resource sharing message service looks for rabbitmq on a host called rabbitmq. The example below uses
+rabbit with the management plugin also installed. This is usedful for watching queues and debugging problem scenarios. Mangement server is installed on port 15672 by default.
+
+You can use RABBITMQ_DEFAULT_USER and RABBITMQ_DEFAULT_PASS environmental variables to set the default user/pass. We use "--restart always" to start the container automatically.
+
+    docker run -d --restart always --hostname rabbitmq --name rabbitmq -e RABBITMQ_DEFAULT_USER=adm -e RABBITMQ_DEFAULT_PASS=admpass rabbitmq:management
+
+if you would like to be able to access rabbitmq from the host system on localhost, add -p 15672:15672 -p 5672:5672 this makes your install command
+
+    docker run -d --restart always --hostname rabbitmq -p 15672:15672 -p 5672:5672 --name rabbitmq -e RABBITMQ_DEFAULT_USER=adm -e RABBITMQ_DEFAULT_PASS=admpass rabbitmq:management
+
+once running use
+
+    docker logs rabbitmq
+
+To check that everything is ok. Note specifically the line near the top that says  database dir   : /var/lib/rabbitmq/mnesia/rabbit@rabbitmq - This is how the docker/rabbit image achieves persistence.
+YMMV with this setup in production!
+
 
 ## Testing Endpoints
 
