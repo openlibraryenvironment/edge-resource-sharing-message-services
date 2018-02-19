@@ -7,13 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.k_int.rs.rabbit.RabbitAdapter;
-
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -24,8 +18,12 @@ import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.k_int.rs.rabbit.RabbitAdapter;
 
 
 /**
@@ -38,6 +36,15 @@ public class RSServer implements CommandLineRunner {
 
   private final Logger logger = LoggerFactory.getLogger(RSServer.class);
 
+  @Value('${com.k_int.rabbit.hostname}')
+  private String rabbit_hostname = null;
+
+  @Value('${com.k_int.rabbit.username}')
+  private String rabbit_username = null;
+
+  @Value('${com.k_int.rabbit.password}')
+  private String rabbit_password = null;
+
   @Autowired
   public RabbitAdapter rabbitAdapter;
 
@@ -47,11 +54,15 @@ public class RSServer implements CommandLineRunner {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
-  final static String outboundQueueName = "OutboundMessageQueue";
+  final static String outboundQueueName = "OutboundRSMessageQueue";
 
    @Bean
    public ConnectionFactory connectionFactory() {
-     return new CachingConnectionFactory("rabbitmq");
+     logger.debug("New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
+     ConnectionFactory cf = new CachingConnectionFactory(rabbit_hostname ?: 'rabbitmq');
+     cf.setUsername(rabbit_username);
+     cf.setPassword(rabbit_password);
+     return cf;
    }
 
   @Bean
@@ -69,9 +80,9 @@ public class RSServer implements CommandLineRunner {
 
   @Bean
   Binding outgoingMessageBinding(Queue outboundQueue, TopicExchange rsExchange) {
-    // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key OutViaProtocol.#
-    // This means that any time a message is posted with routing key OutViaProtocol.# an entry will be posted to the durable outbountQueue
-    return BindingBuilder.bind(outboundQueue).to(rsExchange).with('OutViaProtocol.#');
+    // We need to bind the OutboundMessageQueue to the RSExchange so that when a message is published with the routing key RSOutViaProtocol.#
+    // This means that any time a message is posted with routing key RSOutViaProtocol.# an entry will be posted to the durable outbountQueue
+    return BindingBuilder.bind(outboundQueue).to(rsExchange).with('RSOutViaProtocol.#');
   }
 
   /*

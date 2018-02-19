@@ -36,8 +36,9 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
 
   /**
    * This is called by the binding to OutboundMessageQueue which is bound to the exchange
-   * via routing key OutViaProtocol.#. This means someone is asking us to send a message
-   * via a protocol.
+   * via routing key RSOutViaProtocol.#. This means someone is asking us to send a message
+   * via a protocol. When we detect such a message, pull it from the queue and use the routing
+   * information in the header to contact the appropriate remote host and send the message.
    */
   public void onMessage(Message message) {
     String json_payload_as_string = new String(message.getBody());

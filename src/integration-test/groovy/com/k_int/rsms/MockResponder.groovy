@@ -71,17 +71,17 @@ class MockResponder implements MessageListener {
   @Bean
   Binding test001Binding(Queue test001Queue, TopicExchange exchange) {
     logger.debug("Binding inbound queue 001");
-    // The binding that arranges for message with topic InboundMessage.ILLTEST-local-001 posted to RSExchange
+    // The binding that arranges for message with topic RSInboundMessage.ILLTEST-local-001 posted to RSExchange
     // to be added to the durable queue test001Queue
-    return BindingBuilder.bind(test001Queue).to(exchange).with('InboundMessage.ILLTEST-local-001');
+    return BindingBuilder.bind(test001Queue).to(exchange).with('RSInboundMessage.ILLTEST-local-001');
   }
 
   @Bean
   Binding test002Binding(Queue test002Queue, TopicExchange exchange) {
     logger.debug("Binding inbound queue 002");
-    // The binding that arranges for message with topic InboundMessage.ILLTEST-local-002 posted to RSExchange
+    // The binding that arranges for message with topic RSInboundMessage.ILLTEST-local-002 posted to RSExchange
     // to be added to the durable queue test002Queue
-    return BindingBuilder.bind(test002Queue).to(exchange).with('InboundMessage.ILLTEST-local-002');
+    return BindingBuilder.bind(test002Queue).to(exchange).with('RSInboundMessage.ILLTEST-local-002');
   }
 
 

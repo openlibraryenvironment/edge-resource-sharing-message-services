@@ -9,6 +9,7 @@ import com.k_int.rs.server.RSServer
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,6 +25,9 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
  * Once set up, Inject a new REQUEST message sent as symbol ILLTEST-local-001 to ILLTEST-local-002.
  * The listener for ILLTEST-local-002 should recognise the incoming message and respond with a message
  * The test completes when the mock_responder has recieved all the correct protocol messages, or a timeout happens.
+ *
+ * RSServer - the resource sharing server - is a spring boot application, which we are testing here. Use the SpringBootTest annotation
+ * to do all necessary config
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest( classes = RSServer.class)
@@ -41,15 +45,21 @@ class TestResourceSharingMessageService  extends Specification {
   @Autowired
   private RabbitTemplate rabbitTemplate;
 
+  /**
+   * test injection of values from integration-test/resources/application.yml
+   */
+  @Value('${wibble}')
+  private String wibble;
+
   @Test
   public void testIntegrationTestConfig() {
     // integration-test/resources/application.yml has a setting called wibble with value 'This is a test value'
     // Lets just make sure that we have that config file read and the settings available
-    // assert wibble == 'This is a test value'
+    assert wibble == 'This is a test value'
   }
 
   @Test
-  public void testCase001() {
+  public void testSendRequest() {
 
     // generate a new Transaction group qualifier. This is what will be used
     // to make sure this test doesn't pick up messages floating around from any other
@@ -116,12 +126,14 @@ class TestResourceSharingMessageService  extends Specification {
 
 
       // Put our request on the outbound message queue
-      rabbitTemplate.convertAndSend('RSExchange', 'OutViaProtocol.TCP', outbound_json );
+      rabbitTemplate.convertAndSend('RSExchange', 'RSOutViaProtocol.TCP', outbound_json );
 
     then:
       logger.debug("Waiting for auto-responder conversations to complete");
-      assert mock_responder.waitForConversationToComplete()
+      def result = mock_responder.waitForConversationToComplete();
 
+    expect:
+      result == true
   }
 }
 

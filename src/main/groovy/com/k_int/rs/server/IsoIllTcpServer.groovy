@@ -21,7 +21,12 @@ import com.k_int.iso10160.ISO10161ToJsonDataBinder
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 /**
- *
+ * IsoIllTcpServer.
+ * Listens on a well known port for incoming ISO ILL APDUs. Decodes them and then
+ * posts them to the RabbitMQ RSInboundMessage.<recipient> queue. The expectation is
+ * that someone will be listening for messages for that symbol and action the message
+ * accordingly. Multiple messages may come from a remote source. The iso10161 converters
+ * deal with turning the ASN -> POJO -> Map/Json and also extract the remote party.
  *
  * SeeAlso: https://spring.io/guides/gs/messaging-rabbitmq/
  */
@@ -56,14 +61,14 @@ public class IsoIllTcpServer {
           // logger.debug("Incoming message as map: ${received_request}");
 
           if ( received_request.participantInfo ) {
-            logger.debug("Extracted participant info for incoming message. Posting to InboundMessage.${received_request.participantInfo.recipient.institution_symbol}");
+            logger.debug("Extracted participant info for incoming message. Posting to RSInboundMessage.${received_request.participantInfo.recipient.institution_symbol}");
 
             // We now need to post the fact that a message has been received to the RSExchange using routingkey
-            // InboundMessage.# where # is the symbol of the partner
+            // RSInboundMessage.# where # is the symbol of the partner
             String json_message = groovy.json.JsonOutput.toJson(received_request);
              
             // TODO work out symbol of partner org
-            rabbitTemplate.convertAndSend('RSExchange', 'InboundMessage.'+received_request.participantInfo.recipient.institution_symbol, json_message);
+            rabbitTemplate.convertAndSend('RSExchange', 'RSInboundMessage.'+received_request.participantInfo.recipient.institution_symbol, json_message);
           }
           else {
             logger.error("Unable to extract participant info, so no way to route incoming message. ${received_request}");
