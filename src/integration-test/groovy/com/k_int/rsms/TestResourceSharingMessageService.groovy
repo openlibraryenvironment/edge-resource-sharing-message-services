@@ -120,10 +120,8 @@ class TestResourceSharingMessageService  extends Specification {
 
     then:
       logger.debug("Waiting for auto-responder conversations to complete");
-      mock_responder.waitForConversationToComplete();
+      assert mock_responder.waitForConversationToComplete()
 
-    expect:
-      1==1
   }
 }
 
