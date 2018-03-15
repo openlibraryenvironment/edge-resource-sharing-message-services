@@ -67,6 +67,8 @@ These commands assume you are managing rabbitmq as a docker dependency
 If NOT using rabbit as defined below, the default configuration needs a username and password, the following matches the config from docker
 
     rabbitmqctl add_user adm admpass
+    rabbitmqctl set_user_tags adm administrator
+    rabbitmqctl set_permissions -p / adm ".*" ".*" ".*"
 
 The server application binds to OutboundMessageQueue. Whenever a message is posted to RSExchange with the routing key OutViaProtocol.# where # determines the
 protocol used to send. That message will be picked up

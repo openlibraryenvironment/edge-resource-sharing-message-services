@@ -91,12 +91,14 @@ public class IsoIllTcpServer {
     // Create a new protocol server listening on port 8999i for encoded integer values, 
     // and customise the protocol association factory
     // so that we pass our observer to all associations.
+    int PORT = 8999;
+    logger.debug("Create new protocol server on ${PORT}");
     ProtocolServer ps = new ProtocolServer<ILL_APDU_codec, ILL_APDU_type>(
-               8999,
+               PORT,
                ILL_APDU_codec.getCodec(),
                paf);
 
-    logger.debug("Start New protocol server");
+    logger.debug("Start New protocol server on ${PORT}");
     ps.start();
     logger.debug("Started Server.");
   }
