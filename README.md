@@ -64,6 +64,10 @@ These commands assume you are managing rabbitmq as a docker dependency
     rabbitmqctl list_queues
     rabbitmqctl list_bindings
 
+In docker use this style of command:
+
+    docker exec rabbitmq rabbitmqctl list_exchanges
+
 If NOT using rabbit as defined below, the default configuration needs a username and password, the following matches the config from docker
 
     rabbitmqctl add_user adm admpass
@@ -95,7 +99,11 @@ ISO10161 Support comes from this project : https://github.com/k-int/iso10161 wit
 
 This project is built using gradle 4.3.1, YMMV with other versions.
 
+    gradle build
+
 # Running
+
+## Executable jar
 
 The gradle file uses the spring boot plugin to build a single jar consisting of all dependencies. The following command will launch the server:
 
@@ -116,13 +124,15 @@ See https://stackoverflow.com/questions/37417749/generic-docker-image-and-docker
 
 ## Build
 
+### Docker Image
+
 gradle build docker
 
 to build the docker image run
 
     gradle docker
 
-## Publish to dockerhub
+### Publish to dockerhub
 
 Normally published to the knowint user on dockerhub. See ian for credentials. use docker login to log in command line session, then run.
 

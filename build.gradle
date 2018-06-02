@@ -10,7 +10,7 @@ buildscript {
   }
   dependencies {
     classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE'
-    classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.17.2'
+    classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2'
   }
 }
 
@@ -49,8 +49,9 @@ version = '1.0'
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'Gradle Quickstart',
-                   'Implementation-Version': version
+        attributes   'Implementation-Title': 'Resource Sharing Message Services', 
+                   'Implementation-Version': version,
+                               'Main-Class': 'com.k_int.rs.server.RSServer'
     }
     // baseName = 'gs-spring-boot'
     // version =  '0.1.0'
