@@ -58,7 +58,7 @@ These commands assume you are managing rabbitmq as a docker dependency
     chmod u+rx ./rabbitmqadmin
     ./rabbitmqadmin  --username=adm --password=admpass declare exchange name=RSExchange type=topic
     ./rabbitmqadmin  --username=adm --password=admpass declare queue name=OutboundMessageQueue durable=true
-    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="OutViaProtocol.#"
+    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="RSOutViaProtocol.#"
     rabbitmqctl set_permissions rsapp "stomp-subscription-.*" "stomp-subscription-.*" "(RSExchange|stomp-subscription-.*)"
     rabbitmqctl list_exchanges
     rabbitmqctl list_queues
@@ -74,7 +74,7 @@ If NOT using rabbit as defined below, the default configuration needs a username
     rabbitmqctl set_user_tags adm administrator
     rabbitmqctl set_permissions -p / adm ".*" ".*" ".*"
 
-The server application binds to OutboundMessageQueue. Whenever a message is posted to RSExchange with the routing key OutViaProtocol.# where # determines the
+The server application binds to OutboundMessageQueue. Whenever a message is posted to RSExchange with the routing key RSOutViaProtocol.# where # determines the
 protocol used to send. That message will be picked up
 by the binding and enqued on OutboundMessageQueue for delivery. The Server will dequeue the message and cause the appropriate protocol message to be sent.
 
@@ -114,7 +114,7 @@ The gradle file uses the spring boot plugin to build a single jar consisting of 
 
 You can post a message directly to a topic or queue via the command line...
 
-rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="{'json':'document'}"
+rabbitmqadmin publish exchange=RSExchange routing_key=RSOutViaProtocol.TCP payload="{'json':'document'}"
 
 # Docker image::
 
