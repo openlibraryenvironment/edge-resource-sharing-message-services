@@ -1,6 +1,9 @@
 #
 # Pull the rabbitmq admin command from the server by visiting http://localhost:15672/cli/rabbitmqadmin
 #
+tgq=$(uuidgen)
+tq=$(uuidgen)
+
 ~/rabbitmqadmin --username=adm --password=admpass publish exchange=RSExchange routing_key=RSOutViaProtocol.TCP payload='{
   "header":{
     "protocol":"TCP",
@@ -11,8 +14,8 @@
     "request": {
       "protocol_version_num":1,
       "transaction_id":{
-        "transaction_group_qualifier":"8746823746",
-        "transaction_qualifier":"34897234987"
+        "transaction_group_qualifier":"'$tgq'",
+        "transaction_qualifier":"'$tq'"
       },
       "service_date_time": {
         "date_time_of_this_service":{"date":"20170101", "time":"0000"},
