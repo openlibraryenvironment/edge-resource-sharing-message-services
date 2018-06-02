@@ -58,7 +58,9 @@ These commands assume you are managing rabbitmq as a docker dependency
     chmod u+rx ./rabbitmqadmin
     ./rabbitmqadmin  --username=adm --password=admpass declare exchange name=RSExchange type=topic
     ./rabbitmqadmin  --username=adm --password=admpass declare queue name=OutboundMessageQueue durable=true
+    ./rabbitmqadmin  --username=adm --password=admpass declare queue name=InboundMessageQueue durable=true
     ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="RSOutViaProtocol.#"
+    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="InboundMessageQueue" routing_key="RSInboundMessage.#"
     rabbitmqctl set_permissions rsapp "stomp-subscription-.*" "stomp-subscription-.*" "(RSExchange|stomp-subscription-.*)"
     rabbitmqctl list_exchanges
     rabbitmqctl list_queues
