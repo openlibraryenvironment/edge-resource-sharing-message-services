@@ -62,10 +62,15 @@ jar {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: "file://~/.m2/repository/")
+            repository(url: "http://nexus.k-int.com/content/repositories/releases/") {
+                def usr = project.hasProperty('knowintNexusUser') ? knowintNexusUser :''
+                def pass = project.hasProperty('knowintNexusPass') ? knowintNexusPass :''
+                authentication(userName: usr, password: pass)
+            }
         }
     }
 }
+
 
 test {
     systemProperties 'logback.configurationFile' : new File(projectDir,'src/test/resources/logback-test.xml').absolutePath

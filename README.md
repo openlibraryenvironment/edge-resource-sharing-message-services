@@ -111,12 +111,23 @@ The gradle file uses the spring boot plugin to build a single jar consisting of 
 
     java -jar build/libs/resource-sharing-message-services-1.0.jar
 
+## Local maven repo
+
+    gradle install
+
+## K-Int Nexus
+
+    gradle updloadArchives
+
+N.B. You will need to set up ~/.gradle/gradle.properties with the required properties to log onto the nexus repository
 
 # Testing
 
 You can post a message directly to a topic or queue via the command line...
 
-rabbitmqadmin publish exchange=RSExchange routing_key=RSOutViaProtocol.TCP payload="{'json':'document'}"
+    rabbitmqadmin publish exchange=RSExchange routing_key=RSOutViaProtocol.TCP payload="{'json':'document'}"
+
+An example script can be found in ~scripts/send_request.sh which injects an ISO request into the outbound message queue.
 
 # Docker image::
 
