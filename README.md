@@ -58,11 +58,17 @@ These commands assume you are managing rabbitmq as a docker dependency
     chmod u+rx ./rabbitmqadmin
     ./rabbitmqadmin  --username=adm --password=admpass declare exchange name=RSExchange type=topic
     ./rabbitmqadmin  --username=adm --password=admpass declare queue name=OutboundMessageQueue durable=true
-    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="OutViaProtocol.#"
+    ./rabbitmqadmin  --username=adm --password=admpass declare queue name=InboundMessageQueue durable=true
+    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="OutboundMessageQueue" routing_key="RSOutViaProtocol.#"
+    ./rabbitmqadmin  --username=adm --password=admpass declare binding source="RSExchange" destination_type="queue" destination="InboundMessageQueue" routing_key="RSInboundMessage.#"
     rabbitmqctl set_permissions rsapp "stomp-subscription-.*" "stomp-subscription-.*" "(RSExchange|stomp-subscription-.*)"
     rabbitmqctl list_exchanges
     rabbitmqctl list_queues
     rabbitmqctl list_bindings
+
+In docker use this style of command:
+
+    docker exec rabbitmq rabbitmqctl list_exchanges
 
 If NOT using rabbit as defined below, the default configuration needs a username and password, the following matches the config from docker
 
@@ -70,7 +76,7 @@ If NOT using rabbit as defined below, the default configuration needs a username
     rabbitmqctl set_user_tags adm administrator
     rabbitmqctl set_permissions -p / adm ".*" ".*" ".*"
 
-The server application binds to OutboundMessageQueue. Whenever a message is posted to RSExchange with the routing key OutViaProtocol.# where # determines the
+The server application binds to OutboundMessageQueue. Whenever a message is posted to RSExchange with the routing key RSOutViaProtocol.# where # determines the
 protocol used to send. That message will be picked up
 by the binding and enqued on OutboundMessageQueue for delivery. The Server will dequeue the message and cause the appropriate protocol message to be sent.
 
@@ -95,7 +101,11 @@ ISO10161 Support comes from this project : https://github.com/k-int/iso10161 wit
 
 This project is built using gradle 4.3.1, YMMV with other versions.
 
+    gradle build
+
 # Running
+
+## Executable jar
 
 The gradle file uses the spring boot plugin to build a single jar consisting of all dependencies. The following command will launch the server:
 
@@ -106,7 +116,7 @@ The gradle file uses the spring boot plugin to build a single jar consisting of 
 
 You can post a message directly to a topic or queue via the command line...
 
-rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="{'json':'document'}"
+rabbitmqadmin publish exchange=RSExchange routing_key=RSOutViaProtocol.TCP payload="{'json':'document'}"
 
 # Docker image::
 
@@ -116,13 +126,15 @@ See https://stackoverflow.com/questions/37417749/generic-docker-image-and-docker
 
 ## Build
 
+### Docker Image
+
 gradle build docker
 
 to build the docker image run
 
     gradle docker
 
-## Publish to dockerhub
+### Publish to dockerhub
 
 Normally published to the knowint user on dockerhub. See ian for credentials. use docker login to log in command line session, then run.
 
