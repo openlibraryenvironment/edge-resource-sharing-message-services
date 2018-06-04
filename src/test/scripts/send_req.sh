@@ -1,5 +1,8 @@
 #!/bin/bash
 
+export TEST_TGQ=`uuidgen`
+export TEST_TQ=`uuidgen`
+
 rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload="
 {
   \"header\":{
@@ -11,8 +14,8 @@ rabbitmqadmin publish exchange=RSExchange routing_key=OutViaProtocol.TCP payload
     \"request\":{
       \"protocol_version_num\":1,
       \"transaction_id\":{
-        \"transaction_group_qualifier\":\"A-Random-TGQ\",
-        \"transaction_qualifier\":\"A-Random-TQ\"
+        \"transaction_group_qualifier\":\"$TEST_TGQ\",
+        \"transaction_qualifier\":\"${TEST_TQ}\"
       },
       \"service_date_time\": {
         \"date_time_of_this_service\":{\"date\":\"20170101\", \"time\":\"0000\"},

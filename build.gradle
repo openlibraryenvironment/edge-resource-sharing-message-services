@@ -32,7 +32,7 @@ dependencies {
 
   compile group: 'log4j', name: 'log4j', version: '1.2.5'
   compile group: 'com.k_int', name: 'A2J', version: '1.0.2'
-  compile group: 'com.k_int', name: 'iso10161', version: '1.0'
+  compile group: 'com.k_int', name: 'iso10161', version: '1.0.1'
   compile group: 'org.codehaus.groovy', name:'groovy-all', version:'2.4.10'
   compile group: 'org.springframework.boot', name:'spring-boot-starter', version: '1.5.10.RELEASE'
   compile group: 'org.springframework.boot', name:'spring-boot-starter-amqp', version: '1.5.10.RELEASE'
