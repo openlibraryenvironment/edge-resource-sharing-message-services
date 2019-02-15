@@ -117,7 +117,27 @@ task integrationTest(type: Test) {
 
 
 task buildDeb(type: Deb) {
-  release '1'
+
+  packageName = 'rs_message_services'
+  version = '0.0.1'
+  release = 1
+
+  requires('openjdk-8-jdk')
+  requires('openjdk-8-jre')
+  requires('rabbitmq-server')
+
+  into '/opt/rs_message_services'
+
+  from(jar.outputs.files) {
+    into 'lib'
+  }
+  from('lib') {
+    into 'lib'
+  }
+  from('src/main/resources') {
+    fileType CONFIG | NOREPLACE
+    into 'conf'
+  }
 }
 
 check.dependsOn integrationTest

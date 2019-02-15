@@ -1,0 +1,40 @@
+[Unit]
+Description=Resource Sharing Message service
+Wants=rabbitmq.service
+After=rabbitmq.service
+
+
+[Service]
+EnvironmentFile=/etc/default/rs_message_service
+User=rs_message_service
+Group=rs_message_service
+ExecStart=/usr/share/rs_message_service/bin/rs_message_service.sh
+WorkingDirectory=/var/lib/rs_message_service
+RuntimeDirectory=rs_message_service
+RuntimeDirectoryMode=755
+PIDFile=/var/run/rs_message_service/rs_message_service.pid
+
+
+# useful for Java processes
+KillSignal=SIGTERM
+SendSIGKILL=no
+SuccessExitStatus=143
+
+# Disable TimeoutStopSec
+TimeoutStopSec=0
+
+# wait 2 seconds before restarting Okapi
+RestartSec=2
+
+# StandardOutput is configured to redirect to journalctl since
+# some error messages may be logged in standard output before
+# the Okapi logging system is initialized.
+StandardOutput=journal
+StandardError=inherit
+
+# Specifies the maximum file descriptor number that can be opened by this process
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+
