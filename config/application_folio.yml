@@ -1,0 +1,7 @@
+# Default application.yml
+
+resourcesharing:
+  rabbit:
+    hostname: localhost
+    username: guest
+    password: guest

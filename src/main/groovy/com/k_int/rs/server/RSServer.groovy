@@ -36,13 +36,13 @@ public class RSServer implements CommandLineRunner {
 
   private final Logger logger = LoggerFactory.getLogger(RSServer.class);
 
-  @Value('${com.k_int.rabbit.hostname}')
+  @Value('${resourcesharing.rabbit.hostname}')
   private String rabbit_hostname = null;
 
-  @Value('${com.k_int.rabbit.username}')
+  @Value('${resourcesharing.rabbit.username}')
   private String rabbit_username = null;
 
-  @Value('${com.k_int.rabbit.password}')
+  @Value('${resourcesharing.rabbit.password}')
   private String rabbit_password = null;
 
   @Autowired
@@ -58,7 +58,7 @@ public class RSServer implements CommandLineRunner {
 
    @Bean
    public ConnectionFactory connectionFactory() {
-     logger.debug("New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
+     logger.debug("** New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
      ConnectionFactory cf = new CachingConnectionFactory(rabbit_hostname ?: 'rabbitmq');
      cf.setUsername(rabbit_username);
      cf.setPassword(rabbit_password);

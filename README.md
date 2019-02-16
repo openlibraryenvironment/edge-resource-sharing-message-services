@@ -99,9 +99,9 @@ ISO10161 Support comes from this project : https://github.com/k-int/iso10161 wit
 
 # Building
 
-This project is built using gradle 4.3.1, YMMV with other versions.
+This project is built using gradle 5.2.1, YMMV with other versions so please use the gradle wrapper installed
 
-    gradle build
+    ./gradlew build
 
 # Running
 
@@ -113,11 +113,11 @@ The gradle file uses the spring boot plugin to build a single jar consisting of 
 
 ## Local maven repo
 
-    gradle install
+    ./gradlew install
 
 ## K-Int Nexus
 
-    gradle updloadArchives
+    ./gradlew updloadArchives
 
 N.B. You will need to set up ~/.gradle/gradle.properties with the required properties to log onto the nexus repository
 
