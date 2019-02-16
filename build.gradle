@@ -12,7 +12,7 @@ buildscript {
   dependencies {
     classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE'
     classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2'
-    classpath "com.netflix.nebula:gradle-ospackage-plugin:6.1.1"
+    classpath "com.netflix.nebula:gradle-ospackage-plugin:5.3.0"
   }
 }
 
