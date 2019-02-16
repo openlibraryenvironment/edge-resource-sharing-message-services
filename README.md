@@ -194,3 +194,9 @@ should respond in the following ways
 
 Our happy path case - send a request with a title, the server will respond with Shipped
                                                                                                                   
+
+# About the .deb distribution
+
+See https://github.com/nebula-plugins/gradle-ospackage-plugin/wiki/Usage-Example
+and dpkg-deb -c ./build/distributions/rs-message-services_0.0.1-1_all.deb 
+
