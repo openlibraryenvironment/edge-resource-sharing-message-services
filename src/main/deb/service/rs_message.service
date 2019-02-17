@@ -1,7 +1,7 @@
 [Unit]
 Description=Resource Sharing Message service
-Wants=rabbitmq.service
-After=rabbitmq.service
+Wants=rabbitmq-server.service
+After=rabbitmq-server.service
 
 
 [Service]
