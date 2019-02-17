@@ -12,7 +12,6 @@
 RSMS_USER="rsms"
 RSMS_GROUP="rsms"
 DATA_DIR="/var/lib/rs-message-service"
-CONF_DIR="/etc/rs-message-services"
 LOG_DIR="/var/log/rs-message-service"
 LIB_DIR="/opt/rs-message-service/lib"
 
@@ -22,16 +21,6 @@ RSMS_ENV_FILE="/etc/default/rs-message-service"
 if [ -f "$RSMS_ENV_FILE" ]; then
     . "$RSMS_ENV_FILE"
 fi
-
-RSMS_CONF_FILE="${CONF_DIR}/rsms.conf"
-
-if [ -f "$RSMS_CONF_FILE" ]; then
-    . "$RSMS_CONF_FILE"
-else
-    echo "Cannot locate rsms.conf"
-    exit 2
-fi
-
 
 IS_UPGRADE=false
 
@@ -55,8 +44,6 @@ esac
 
 mkdir -p "$LOG_DIR"
 chown -R ${RSMS_USER}.${RSMS_GROUP} $LOG_DIR
-chown -R root.${RSMS_GROUP} $CONF_DIR
-chmod 0755 $CONF_DIR
 
 
 if [ "$IS_UPGRADE" != "true" ]; then
