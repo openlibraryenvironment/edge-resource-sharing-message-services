@@ -12,7 +12,7 @@ ExecStart=/opt/rs-message-service/bin/rs_message_service.sh
 WorkingDirectory=/opt/rs-message-service
 RuntimeDirectory=rs-message-service
 RuntimeDirectoryMode=755
-PIDFile=/var/run/rs_message_service/rs_message_service.pid
+PIDFile=/var/run/rs-message-service/rs_message_service.pid
 
 
 # useful for Java processes
