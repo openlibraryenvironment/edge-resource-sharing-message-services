@@ -18,7 +18,7 @@ RS_MESSAGE_SERVICE_GROUP="rsms"
 CONF_DIR="/etc/rs_message_service"
 LIB_DIR="/usr/share/folio/okapi/lib"
 DATA_DIR="/var/lib/rs_message_service"
-PID_DIR="/var/run/rs_message_service"
+PID_DIR="/var/run/rs-message-service"
 
 
 # Do restart on package upgrade.
