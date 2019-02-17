@@ -48,7 +48,7 @@ dependencies {
 
 group = 'com.k_int'
 sourceCompatibility = 1.8
-version = '1.0.0'
+version = '1.0.1'
 
 jar {
     manifest {
@@ -121,7 +121,7 @@ task buildDeb(type: Deb) {
   dependsOn 'build'
 
   packageName = 'rs-message-service'
-  version = '0.0.1'
+  version = '1.0.1'
   release = 1
 
   preInstall file('src/main/deb/pkg/rs-message-service.preinst')
