@@ -28,6 +28,10 @@ java_check() {
 
 java_check
 
+if [ ! -d "${PID_DIR}" ]; then
+  mkdir -p ${PID_DIR}
+fi
+
 if [ -f "${PID_DIR}/rs_message_service.pid" ]; then
    PID=`cat ${PID_DIR}/rs_message_service.pid`
    if ps -p $PID > /dev/null; then
@@ -51,7 +55,7 @@ else
    echo ""
 
    echo -n "Starting RS Message services..."
-   exec $JAVA $RS_MESSAGE_SERVICE_JAVA_OPTS -jar "$RS_MESSAGE_SERVICE_JAR" $RS_MESSAGE_SERVICE_OPTIONS <&- &
+   exec $JAVA $RS_MESSAGE_SERVICE_JAVA_OPTS -jar "$RS_MESSAGE_SERVICE_JAR" $RS_MESSAGE_SERVICE_OPTIONS > /var/log/rs-message-service/out 2> /var/log/rs-message-service/err <&- &
 
    RETVAL=$?
    PID=$!

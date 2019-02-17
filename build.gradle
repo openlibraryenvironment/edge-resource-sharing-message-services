@@ -146,10 +146,14 @@ task buildDeb(type: Deb) {
     into '/lib/systemd/system'
   }
   from('src/main/deb/scripts') {
+    fileMode = 0550
     into 'bin'
   }
   from('src/main/deb/default') {
     into '/etc/default'
+  }
+  from('config') {
+    into 'config'
   }
 
   // link('/etc/init.d/foo', '/lib/systemd/system/okapi.service')
