@@ -200,3 +200,9 @@ Our happy path case - send a request with a title, the server will respond with 
 See https://github.com/nebula-plugins/gradle-ospackage-plugin/wiki/Usage-Example
 and dpkg-deb -c ./build/distributions/rs-message-services_0.0.1-1_all.deb 
 
+vagrant hints
+
+vagrant package -- to build a new vagrant package
+vagrant box add rstesting ./tsms_testing.box
+vagrant box remove rstesting
+
