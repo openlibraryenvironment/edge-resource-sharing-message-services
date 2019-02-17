@@ -6,11 +6,11 @@ After=rabbitmq.service
 
 [Service]
 EnvironmentFile=/etc/default/rs_message_service
-User=rs_message_service
-Group=rs_message_service
+User=rsms
+Group=rsms
 ExecStart=/opt/rs-message-service/bin/rs_message_service.sh
-WorkingDirectory=/var/lib/rs_message_service
-RuntimeDirectory=rs_message_servic
+WorkingDirectory=/opt/rs-message-service
+RuntimeDirectory=rs-message-service
 RuntimeDirectoryMode=755
 PIDFile=/var/run/rs_message_service/rs_message_service.pid
 
@@ -26,9 +26,6 @@ TimeoutStopSec=0
 # wait 2 seconds before restarting Okapi
 RestartSec=2
 
-# StandardOutput is configured to redirect to journalctl since
-# some error messages may be logged in standard output before
-# the Okapi logging system is initialized.
 StandardOutput=journal
 StandardError=inherit
 

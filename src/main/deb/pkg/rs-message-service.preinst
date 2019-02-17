@@ -67,6 +67,13 @@ case "$1" in
             echo RabbitMQ user adm already present
         fi
 
+        if [ ! -d "/var/lib/rs-message-service" ]; then
+          mkdir /var/lib/rs-message-service
+        fi
+
+        chown rsms:rsms /var/lib/rs-message-service
+        chown -R rsms:rsms /opt/rs-message-service
+
         echo install or upgrade step completed
     ;;
     abort-deconfigure|abort-upgrade|abort-remove)

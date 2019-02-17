@@ -1,4 +1,4 @@
-
+#!/bin/bash
 
 [ -f /etc/default/rs_message_service ] && . /etc/default/rs_message_service
 
