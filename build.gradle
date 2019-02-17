@@ -118,6 +118,8 @@ task integrationTest(type: Test) {
 
 task buildDeb(type: Deb) {
 
+  dependsOn 'build'
+
   packageName = 'rs-message-service'
   version = '0.0.1'
   release = 1
