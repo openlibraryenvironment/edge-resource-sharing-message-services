@@ -48,7 +48,7 @@ dependencies {
 
 group = 'com.k_int'
 sourceCompatibility = 1.8
-version = '1.0'
+version = '1.0.0'
 
 jar {
     manifest {
