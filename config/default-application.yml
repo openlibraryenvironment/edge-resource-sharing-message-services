@@ -3,5 +3,5 @@
 resourcesharing:
   rabbit:
     hostname: localhost
-    username: guest
-    password: guest
+    username: rsms
+    password: rsms
