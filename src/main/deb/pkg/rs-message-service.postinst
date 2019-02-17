@@ -1,0 +1,88 @@
+#!/bin/bash
+
+#!/bin/bash -e
+#
+# This script is executed in the post-installation phase
+#
+#   On Debian,
+#       $1=configure : is set to 'configure' and if $2 is set, it is an upgrade
+#
+
+# Sets the default values for rsms variables used in this script
+RSMS_USER="rsms"
+RSMS_GROUP="rsms"
+DATA_DIR="/var/lib/rs-message-service"
+CONF_DIR="/etc/rs-message-services"
+LOG_DIR="/var/log/rs-message-service"
+LIB_DIR="/opt/rs-message-service/lib"
+
+
+# Source the default env file
+RSMS_ENV_FILE="/etc/default/rs-message-service"
+if [ -f "$RSMS_ENV_FILE" ]; then
+    . "$RSMS_ENV_FILE"
+fi
+
+RSMS_CONF_FILE="${CONF_DIR}/rsms.conf"
+
+if [ -f "$RSMS_CONF_FILE" ]; then
+    . "$RSMS_CONF_FILE"
+else
+    echo "Cannot locate rsms.conf"
+    exit 2
+fi
+
+
+IS_UPGRADE=false
+
+case "$1" in
+
+    configure)
+        # If $1=configure and $2 is set, this is an upgrade
+        if [ "$2" ]; then
+            IS_UPGRADE=true
+        fi
+    ;;
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "post install script called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+
+mkdir -p "$LOG_DIR"
+chown -R ${RSMS_USER}.${RSMS_GROUP} $LOG_DIR
+chown -R root.${RSMS_GROUP} $CONF_DIR
+chmod 0755 $CONF_DIR
+
+
+if [ "$IS_UPGRADE" != "true" ]; then
+    # initial installation.  configure systemd and start rsms
+    if command -v systemctl >/dev/null; then
+        echo "Configuring RS Message service service..."
+        systemctl enable rs_message.service
+        systemctl daemon-reload
+        echo -n "Starting RS Message service..."
+        systemctl start rs_message.service || true
+        echo " OK"
+    fi
+elif [ "$RESTART_ON_UPGRADE" = "true" ]; then
+    # rsms upgrade and RESTART_ON_UPGRADE="true"
+    echo -n "Restarting rsms service..."
+    if command -v systemctl >/dev/null; then
+        systemctl daemon-reload
+        systemctl restart rs_message.service || true
+        echo " OK"
+    fi
+else
+    # rsms upgrade and RESTART_ON_UPGRADE is false or not set.
+    echo "RS Message Services upgraded but not restarted. To restart RS Message Services:"
+    echo "   sudo systemctl daemon-reload"
+    echo "   sudo systemctl restart rsms.service"
+    echo ""
+fi
+
+exit 0

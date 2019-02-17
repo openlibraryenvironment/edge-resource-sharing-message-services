@@ -118,15 +118,20 @@ task integrationTest(type: Test) {
 
 task buildDeb(type: Deb) {
 
-  packageName = 'rs-message-services'
+  packageName = 'rs-message-service'
   version = '0.0.1'
   release = 1
+
+  preInstall file('src/main/deb/pkg/rs-message-service.preinst')
+  postInstall file('src/main/deb/pkg/rs-message-service.postinst')
+  preUninstall file('src/main/deb/pkg/rs-message-service.prerm')
+  postUninstall file('src/main/deb/pkg/rs-message-service.postrm')
 
   requires('openjdk-8-jdk')
   requires('openjdk-8-jre')
   requires('rabbitmq-server')
 
-  into '/opt/rs-message-services'
+  into '/opt/rs-message-service'
 
   from(jar.outputs.files) {
     into 'lib'
@@ -134,6 +139,18 @@ task buildDeb(type: Deb) {
   from('lib') {
     into 'lib'
   }
+  // Copy system service config file
+  from('src/main/deb/service') {
+    into '/lib/systemd/system'
+  }
+  from('src/main/deb/scripts') {
+    into 'bin'
+  }
+  from('src/main/deb/default') {
+    into '/etc/default'
+  }
+
+  // link('/etc/init.d/foo', '/lib/systemd/system/okapi.service')
 }
 
 check.dependsOn integrationTest

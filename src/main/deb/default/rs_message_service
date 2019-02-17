@@ -1,0 +1,23 @@
+#
+# Resource Sharing Message Service
+#
+# Install as /etc/default/rs_message_service
+#
+
+# rs_message_service requires Java 8.  Set JAVA_HOME if a Java 8
+# executable is not in your path.
+#JAVA_HOME="/usr/lib/jvm/java-1.8.0-openjdk-amd64/bin/java"
+
+# Add additional JVM space separated options here.
+RS_MESSAGE_SERVICE_JAVA_OPTS="-Djava.awt.headless=true"
+
+# Default Okapi settings
+RS_MESSAGE_SERVICE_USER="rsms"
+RS_MESSAGE_SERVICE_GROUP="rsms"
+CONF_DIR="/etc/rs_message_service"
+LIB_DIR="/usr/share/folio/okapi/lib"
+DATA_DIR="/var/lib/rs_message_service"
+PID_DIR="/var/run/rs_message_service"
+
+# Do restart on package upgrade.
+#RESTART_ON_UPGRADE=true

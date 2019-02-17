@@ -1,0 +1,65 @@
+#!/bin/bash -e
+#
+# This script is executed in the pre-installation phase
+#
+#   On Debian,
+#       $1=install : indicates an new install
+#       $1=upgrade : indicates an upgrade
+#
+
+
+# Sets the default values for Okapi variables
+RSMS_USER="rsms"
+RSMS_GROUP="rsms"
+DATA_DIR="/var/lib/rs-message-service"
+
+# Source the default env file
+RSMS_ENV_FILE="/etc/default/rs-message-service"
+if [ -f "$RSMS_ENV_FILE" ]; then
+    . "$RSMS_ENV_FILE"
+fi
+
+case "$1" in
+    install|upgrade)
+
+        # Create resource sharing message service group if not existing
+        if ! getent group "$RSMS_GROUP" > /dev/null 2>&1 ; then
+            echo -n "Creating $RSMS_GROUP group..."
+            addgroup --quiet --system "$RSMS_GROUP"
+            echo " OK"
+        fi
+
+        # Create sharing message service user if not existing
+        if ! id "$RSMS_USER" > /dev/null 2>&1 ; then
+            echo -n "Creating $RSMS_USER user..."
+            adduser --quiet \
+                    --system \
+                    --home "$DATA_DIR" \
+                    --ingroup "$RSMS_GROUP" \
+                    --disabled-password \
+                    --shell /bin/false \
+                    "$RSMS_USER"
+            echo " OK"
+        fi
+
+        # Create the rabbit user for message passing
+        echo Creating message queue users for resource sharing message services
+        rabbitmqctl add_user rsms rsms
+        rabbitmqctl set_user_tags rsms administrator
+        rabbitmqctl set_permissions -p / rsms ".*" ".*" ".*"
+        rabbitmqctl add_user adm admpass
+        rabbitmqctl set_user_tags adm administrator
+        rabbitmqctl set_permissions -p / adm ".*" ".*" ".*"
+
+    ;;
+    abort-deconfigure|abort-upgrade|abort-remove)
+    ;;
+
+    *)
+        echo "pre install script called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+exit 0
+
