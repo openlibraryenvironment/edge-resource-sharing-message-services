@@ -56,7 +56,7 @@ jar {
                    'Implementation-Version': version,
                                'Main-Class': 'com.k_int.rs.server.RSServer'
     }
-    // baseName = 'gs-spring-boot'
+    baseName = 'ki-rsms'
     // version =  '0.1.0'
 }
 
