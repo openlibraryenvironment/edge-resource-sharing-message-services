@@ -16,7 +16,7 @@ node {
 
   stage ('archive') {
     sh 'ls build/libs'
-    archiveArtifacts artifacts: 'build/libs/resource-sharing-message-services-*'
+    archiveArtifacts artifacts: 'build/libs/ki-rsms*'
   }
   // step([$class: 'ArtifactArchiver', artifacts: 'build/libs/*.jar', fingerprint: true])
   // 
