@@ -14,7 +14,6 @@ node {
   }
 
   stage 'archive' {
-    sh 'ls build'
     sh 'ls build/libs'
     archiveArtifacts artifacts: 'build/libs/resource-sharing-message-services-*'
   }
