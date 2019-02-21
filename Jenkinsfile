@@ -5,7 +5,8 @@ node {
   checkout scm
 
   stage 'test' {
-    sh './gradlew clean test'
+    sh './gradlew clean'
+    sh './gradlew clean'
   }
 
   stage 'build'{
