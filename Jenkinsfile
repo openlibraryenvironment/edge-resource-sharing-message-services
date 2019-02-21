@@ -11,7 +11,7 @@ node {
   sh './gradlew assemble'
 
   stage 'archive'
-  archiveArtifacts artifacts: 'build/libs/esource-sharing-message-services-*'
+  archiveArtifacts artifacts: 'build/libs/resource-sharing-message-services-*'
   // step([$class: 'ArtifactArchiver', artifacts: 'build/libs/*.jar', fingerprint: true])
   // 
   // stage 'reports'
