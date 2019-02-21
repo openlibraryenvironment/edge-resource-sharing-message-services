@@ -1,9 +1,6 @@
 #!groovy
 
 node {
-  stage 'checkout' {
-    checkout scm
-  }
 
   stage 'test' {
     sh './gradlew clean test'
