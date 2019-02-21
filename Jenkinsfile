@@ -2,18 +2,19 @@
 
 node {
 
-  checkout scm
-
-  stage 'test' {
-    sh './gradlew clean'
-    sh './gradlew clean'
+  stage('checkout') {
+    checkout scm
   }
 
-  stage 'build'{
+  stage ('test') {
+    sh './gradlew clean test'
+  }
+
+  stage ('build') {
     sh './gradlew assemble'
   }
 
-  stage 'archive' {
+  stage ('archive') {
     sh 'ls build/libs'
     archiveArtifacts artifacts: 'build/libs/resource-sharing-message-services-*'
   }
