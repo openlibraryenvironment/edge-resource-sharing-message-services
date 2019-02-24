@@ -1,0 +1,17 @@
+version: "2.0"
+
+volumes:
+
+services:
+  # Converted from 
+  # docker run -d --restart always --hostname rabbitmq -p 15672:15672 -p 5672:5672 --name rabbitmq -e RABBITMQ_DEFAULT_USER=adm -e RABBITMQ_DEFAULT_PASS=admpass rabbitmq:management
+  rabbitmq:
+    container_name: rsms-rabbitmq
+    image: rabbitmq:management
+    restart: "no"
+    ports:
+      - 15672:15672 
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=adm
+      - RABBITMQ_DEFAULT_PASS=admpass 
