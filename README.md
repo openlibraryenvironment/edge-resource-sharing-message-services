@@ -68,6 +68,8 @@ Start the resource sharing message service with
 
 This will give you a rabbitMQ service. Note particularly --trace enables more verbose logging for developer setup
 
+In the scripts directory, run send_via_curl.sh which will enqueue a request to Rabbit, and trigger the subsequent send and receive of an ISO 10161 Request message
+
     
 ### RabbitMQ Dependency
 
