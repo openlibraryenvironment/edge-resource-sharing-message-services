@@ -1,0 +1,5 @@
+resourcesharing:
+  rabbit: 
+    hostname: rabbitmq
+    username: adm
+    password: admpass
