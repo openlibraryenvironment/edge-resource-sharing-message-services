@@ -1,9 +1,14 @@
 # Resource sharing message services
 
-This project provides a service API to applications wishing to receive and send protocol messages
+Resource sharing services are a layer atop an enterprise message passing substrate.
+
+This library currently uses RabbitMQ as it's core interface into a message passing substrate.
+This project provides a service API to applications wishing to receive (And announce to observers via the
+messaging substrate) and send (Via requests made on the messaging substrate) protocol messages
 using a variety of message passing protocols. The list of target protocols includes (But is not limited to)
 
 * ISO10161
+* ISO18626
 * GenericScript
 
 A core aim is to insulate appliactions from the specific details of each message passing substrate.
