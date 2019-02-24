@@ -1,5 +1,6 @@
 resourcesharing:
+  nodename: rsms-dev-default-jar-cfg
   rabbit: 
     hostname: rabbitmq
-    username: adm
-    password: admpass
+    username: rsms
+    password: rsms

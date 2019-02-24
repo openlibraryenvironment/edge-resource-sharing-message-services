@@ -1,6 +1,13 @@
 # Default application.yml
 
+logging:
+  level:
+    root: INFO
+    com:
+      k_int: DEBUG
+
 resourcesharing:
+  nodename: rsms-dev
   rabbit:
     hostname: localhost
     username: rsms

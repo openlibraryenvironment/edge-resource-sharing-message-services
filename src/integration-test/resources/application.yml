@@ -1,6 +1,7 @@
 wibble: 'This is a test value'
 
 resourcesharing:
+  nodename: rsms-integration-test-config
   rabbit:
     hostname: rabbitmq
     username: adm

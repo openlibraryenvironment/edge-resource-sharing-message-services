@@ -100,6 +100,6 @@ public class IsoIllTcpServer {
 
     logger.debug("Start New protocol server on ${PORT}");
     ps.start();
-    logger.debug("Started Server.");
+    logger.debug("Started ISO10161 Server on port ${PORT} (ASN.1/BER)");
   }
 }

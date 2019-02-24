@@ -45,6 +45,10 @@ public class RSServer implements CommandLineRunner {
   @Value('${resourcesharing.rabbit.password}')
   private String rabbit_password = null;
 
+  @Value('${resourcesharing.nodename}')
+  private String nodename = null;
+
+
   @Autowired
   public RabbitAdapter rabbitAdapter;
 
@@ -58,7 +62,7 @@ public class RSServer implements CommandLineRunner {
 
    @Bean
    public ConnectionFactory connectionFactory() {
-     logger.debug("** New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
+     logger.info("** [RSMS:${nodename}]  New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
      ConnectionFactory cf = new CachingConnectionFactory(rabbit_hostname ?: 'rabbitmq');
      cf.setUsername(rabbit_username);
      cf.setPassword(rabbit_password);
@@ -105,6 +109,6 @@ public class RSServer implements CommandLineRunner {
   //access command line arguments
   @Override
   public void run(String... args) throws Exception {
-    logger.debug("RSServer::run");
+    logger.debug("RSServer::run (Nodename=${nodename})");
   }
 }
