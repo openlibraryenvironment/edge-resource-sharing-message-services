@@ -1,5 +1,20 @@
 # Resource sharing message services
 
+# Developer quickstart
+
+    gradle build
+    cd testing
+    docker-compose -d -f ./docker-compose.yml up  
+    cd ..
+    java -jar ./build/libs/ki-rsms-1.0.1.jar
+ 
+Separate window
+
+    cd scripts
+    ./send_via_curl.sh
+   
+
+
 Resource sharing services are a layer atop an enterprise message passing substrate.
 
 This library currently uses RabbitMQ as it's core interface into a message passing substrate.
