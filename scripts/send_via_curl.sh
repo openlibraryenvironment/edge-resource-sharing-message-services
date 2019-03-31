@@ -25,12 +25,12 @@ payload='{
         },
         \"requester_id\":{
           \"person_or_institution_symbol\":{
-            \"institution_symbol\":\"ILLTEST-local-001\"
+            \"institution_symbol\":\"RESHARE:DIKUA\"
           }
         },
         \"responder_id\":{
           \"person_or_institution_symbol\":{
-            \"institution_symbol\":\"ILLTEST-local-002\"
+            \"institution_symbol\":\"RESHARE:ACMAIN\"
           }
         },
         \"transaction_type\":\"simple\",
