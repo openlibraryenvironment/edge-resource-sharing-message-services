@@ -242,11 +242,12 @@ Our happy path case - send a request with a title, the server will respond with 
 # About the .deb distribution
 
 See https://github.com/nebula-plugins/gradle-ospackage-plugin/wiki/Usage-Example
-and dpkg-deb -c ./build/distributions/rs-message-services_0.0.1-1_all.deb 
+and 
+dpkg-deb -c ./build/distributions/rs-message-services_0.0.1-1_all.deb - to list the contents of the built package
 
 vagrant hints
 
-vagrant package -- to build a new vagrant package
-vagrant box add rstesting ./tsms_testing.box
-vagrant box remove rstesting
+    vagrant package -- to build a new vagrant package
+    vagrant box add rstesting ./tsms_testing.box
+    vagrant box remove rstesting
 
