@@ -149,7 +149,7 @@ task buildDeb(type: Deb) {
     into '/lib/systemd/system'
   }
   from('src/main/deb/scripts') {
-    fileMode = 0550
+    fileMode = 0555
     into 'bin'
   }
   from('src/main/deb/default') {
