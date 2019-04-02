@@ -43,7 +43,7 @@ if [ -f "${PID_DIR}/rs_message_service.pid" ]; then
       exit 1
    fi
 else
-   RS_MESSAGE_SERVICE_JAR=`ls /opt/rs-message-service/lib/resource-sharing-message-services*.jar`
+   RS_MESSAGE_SERVICE_JAR="/opt/rs-message-service/lib/ki-rsms-current.jar"
 
    echo ""
    echo "############################"

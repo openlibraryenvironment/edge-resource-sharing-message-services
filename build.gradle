@@ -142,6 +142,8 @@ task buildDeb(type: Deb) {
   from('lib') {
     into 'lib'
   }
+  link('/opt/rs-message-service/lib/ki-rsms-current.jar', '/opt/rs-message-service/lib/ki-rsms-'+version+'.jar')
+
   // Copy system service config file
   from('src/main/deb/service') {
     into '/lib/systemd/system'
