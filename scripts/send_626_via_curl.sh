@@ -4,7 +4,7 @@ tq=$(uuidgen)
 
 payload='{
   "properties":{},
-  "routing_key":"RSOutViaProtocol.TCP",
+  "routing_key":"RSOutViaProtocol.ISO18686",
   "payload_encoding":"string",
   "payload":"{
     \"header\":{
