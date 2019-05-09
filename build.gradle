@@ -46,7 +46,7 @@ dependencies {
 }
 
 
-group = 'com.k_int'
+group = 'org.olf'
 sourceCompatibility = 1.8
 version = '1.0.1'
 
