@@ -1,13 +1,18 @@
 # Resource sharing message services
 
-This project provides a service API to applications wishing to receive and send protocol messages
-using a variety of message passing protocols. The list of target protocols includes (But is not limited to)
+This module is a FOLIO EDGE module to provide a service API to FOLIO tenants wishing to receive and send protocol messages
+using a variety of message passing protocols. The list of target protocols includes (But is not limited to).
 
 * ISO18626
 * ISO10161
 * GenericScript
 
-A core aim is to insulate appliactions from the specific details of each message passing substrate.
+Because protocol messages do not include tenants, and the mapping between institutional symbols and FOLIO tenants can be M:N
+this module also handles the various symbol to tenant lookup and switching needed. Since this functionality is highly
+specific to FOLIO/OKAPI environments this module is forked from the origial generic resource sharing message services to
+provide FOLIO specific support.
+
+Regardless, a core aim is for this module continues to be to insulate appliactions/modules from the specific details of each message passing substrate.
 
 The following application messages be supported wherever they are available in the base protocol:
 
@@ -42,6 +47,16 @@ The intent is to provide a system level API where a client can
 
 * Request that a message be sent using a JSON payload which consists of separately defined addressing information and message content. Such messages need to be addressed such that the correct protocol adapter can be invoked.
 * Be notified that a message has been receieved with separate addressing information and message content. Such messages need to be broadcast using a topic arrangement so all interested parties may be notified.
+
+## Generic JSON Payloads
+
+This service abstracts request details to their intention rather than protocol specific fields. Obviously, this makes our generic payloads a superset of at least the 
+mandatory fields from each supported protocol.. Fortunately, there is a great deal of overlap between protocols as to what the minimum mandatory fields are to send and 
+receive request messages. This module may even eventually support crosswalking protocols. Individual generic request messages will be documented here:
+
+### Request Message Json
+
+TBA
 
 ### RabbitMQ Dependency
 
