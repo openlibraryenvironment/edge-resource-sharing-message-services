@@ -3,6 +3,7 @@
 This project provides a service API to applications wishing to receive and send protocol messages
 using a variety of message passing protocols. The list of target protocols includes (But is not limited to)
 
+* ISO18626
 * ISO10161
 * GenericScript
 
