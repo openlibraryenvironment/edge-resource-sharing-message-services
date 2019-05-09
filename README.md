@@ -9,7 +9,7 @@ using a variety of message passing protocols. The list of target protocols inclu
 
 Because protocol messages do not include tenants, and the mapping between institutional symbols and FOLIO tenants can be M:N
 this module also handles the various symbol to tenant lookup and switching needed. Since this functionality is highly
-specific to FOLIO/OKAPI environments this module is forked from the origial generic resource sharing message services to
+specific to FOLIO/OKAPI environments this module is forked from the origial/prior generic resource sharing message services to
 provide FOLIO specific support.
 
 Regardless, a core aim is for this module continues to be to insulate appliactions/modules from the specific details of each message passing substrate.
