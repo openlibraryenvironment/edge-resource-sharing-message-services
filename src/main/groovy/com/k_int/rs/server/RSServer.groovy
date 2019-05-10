@@ -58,7 +58,7 @@ public class RSServer implements CommandLineRunner {
 
    @Bean
    public ConnectionFactory connectionFactory() {
-     logger.debug("** New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
+     logger.debug("**** New rabbit connection factory ${rabbit_hostname} ${rabbit_username} ${rabbit_password}");
      ConnectionFactory cf = new CachingConnectionFactory(rabbit_hostname ?: 'rabbitmq');
      cf.setUsername(rabbit_username);
      cf.setPassword(rabbit_password);
@@ -75,7 +75,7 @@ public class RSServer implements CommandLineRunner {
   @Bean
   TopicExchange rsExchange() {
     // RSExchange is the resource sharing exchange
-    return new TopicExchange("RSExchange");
+    return new TopicExchange("RSExchange"); // name, durable, bool autoDelete
   }
 
   @Bean
