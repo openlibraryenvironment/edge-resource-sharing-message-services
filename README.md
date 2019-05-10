@@ -1,5 +1,30 @@
 # Resource sharing message services
 
+## Prerequisites
+
+You need a rabbitMQ running with a user rsms/rsms with permissions to create queues
+
+## Build
+
+Checkout and from this directory run
+
+    gradle build
+
+This will run integration tests and create an executable jar file
+
+## Run
+
+From the root of the project run
+
+    java -jar ./build/libs/ki-rsms-1.0.1.jar --spring.config.name=default-application
+
+This will start up the executable jar file and identifies the file config/application-default.yml as the source of config information. After running this command
+the edge module is listening on the configured ports for inbound connection oriented ISO 10161 and ISO18626. It is also listening on the queues for requests
+to send outbound messages. Inbound messages will be notified to the queues.
+
+
+## Background
+
 This module is a FOLIO EDGE module to provide a service API to FOLIO tenants wishing to receive and send protocol messages
 using a variety of message passing protocols. The list of target protocols includes (But is not limited to).
 
