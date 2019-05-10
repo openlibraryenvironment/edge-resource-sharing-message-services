@@ -1,4 +1,4 @@
-# Resource sharing message services
+# FOLIO EDGE Module :: Resource sharing message services
 
 ## Prerequisites
 
