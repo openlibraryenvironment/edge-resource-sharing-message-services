@@ -30,7 +30,9 @@ public class IsoIllTcpSender implements RSMessageSender {
     logger.debug("IsoIllTcpSender::init");
   }
 
-  public send(String host, int port, Map message_payload) {
+  public send(Map message_header, Map message_payload) {
+    String host = message_header.address
+    int port = message_header.port
     java.net.Socket client_socket = new java.net.Socket(java.net.InetAddress.getByName(host),port);
     ProtocolAssociation client = new ProtocolAssociation<ILL_APDU_codec, ILL_APDU_type>(client_socket,ILL_APDU_codec.getCodec(),'ClientAssociation');
 

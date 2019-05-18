@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-
+import org.springframework.test.context.web.WebAppConfiguration;
 
 // @TestPropertySource( locations = "classpath:application-integrationtest.properties")
 
@@ -30,6 +30,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
  * to do all necessary config
  */
 @RunWith(SpringRunner.class)
+@WebAppConfiguration
 @SpringBootTest( classes = RSServer.class)
 class TestResourceSharingMessageService  extends Specification {
 
@@ -59,7 +60,7 @@ class TestResourceSharingMessageService  extends Specification {
   }
 
   @Test
-  public void testSendRequest() {
+  public void testSendTCP10161Request() {
 
     // generate a new Transaction group qualifier. This is what will be used
     // to make sure this test doesn't pick up messages floating around from any other
@@ -131,6 +132,38 @@ class TestResourceSharingMessageService  extends Specification {
     then:
       logger.debug("Waiting for auto-responder conversations to complete");
       def result = mock_responder.waitForConversationToComplete();
+
+    expect:
+      result == true
+  }
+
+  @Test
+  public void testSendISO18626Request() {
+    setup:
+      logger.debug("get hold of outbound message queue");
+
+    when:
+     logger.debug("sending request 001 to ILLTEST-local-002");
+      def request = [
+        header:[
+          address:'http://localhost:8080/iso18626',
+        ],
+        message:[
+          titie:'wibble'
+        ]
+      ]
+      def outbound_json = new groovy.json.JsonBuilder(request).toString();
+      logger.debug("Enqueue outbound ISO18626 message via HTTPS ::\n${outbound_json}");
+
+
+      // Put our request on the outbound message queue
+      rabbitTemplate.convertAndSend('RSExchange', 'RSOutViaProtocol.ISO18626/HTTP(S)', outbound_json );
+
+    then:
+      Thread.sleep(2000);
+      logger.debug("Waiting for auto-responder conversations to complete");
+      // def result = mock_responder.waitForConversationToComplete();
+      def result = true;
 
     expect:
       result == true

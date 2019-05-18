@@ -43,7 +43,8 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
   public void onMessage(Message message) {
     String json_payload_as_string = new String(message.getBody());
 
-    logger.debug("onMessage... recv'd routing key: ${message.messageProperties.getReceivedRoutingKey()}");
+    String routing_key = message.messageProperties.getReceivedRoutingKey();
+    logger.debug("onMessage... recv'd routing key: ${routing_key}");
 
     try {
       def jsonSlurper = new JsonSlurper()
@@ -51,26 +52,34 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
 
       def senders = applicationContext.getBeansOfType(com.k_int.rs.server.RSMessageSender.class);
 
-      logger.debug("Current senders: ${senders}");
-      // Figure out if anyone supports the transport protocol defined
-      com.k_int.rs.server.RSMessageSender selected_sender = null;
-      senders.each { k,v ->
-        logger.debug("current protocol ${v.getProtocol()} == requested protocol ${parsed_message.header.protocol} ?");
-        if ( v.getProtocol().equals(parsed_message.header.protocol ) ) {
-          logger.debug("Matched");
-          selected_sender = v;
+      if ( routing_key.startsWith('RSOutViaProtocol.') ) {
+
+        String protocol = routing_key.substring(17, routing_key.length());
+
+        logger.debug("Current senders: ${senders}, target protocol = ${protocol}");
+
+        // Figure out if anyone supports the transport protocol defined
+        com.k_int.rs.server.RSMessageSender selected_sender = null;
+        senders.each { k,v ->
+          logger.debug("current protocol ${v.getProtocol()} == requested protocol ${parsed_message.header.protocol} ?");
+          if ( v.getProtocol().equals(protocol) ) {
+            logger.debug("Matched");
+            selected_sender = v;
+          }
         }
+
+        // If so, call send
+        if ( selected_sender ) {
+          logger.debug("Calling send on selected sender");
+          selected_sender.send(parsed_message.header, parsed_message.message);
+        }
+
+        logger.debug("RabbitAdapter::receiveMessage()");
+        logger.debug("Parsed json: ${parsed_message}");
       }
-      // If so, call send
-
-      if ( selected_sender ) {
-        logger.debug("Sending");
-        selected_sender.send(parsed_message.header.address, parsed_message.header.port, parsed_message.message);
+      else {
+        log.error("Unexpected routing key ${routing_key}");
       }
-
-
-      logger.debug("RabbitAdapter::receiveMessage()");
-      logger.debug("Parsed json: ${parsed_message}");
     }
     catch ( Exception e ) {
       logger.error("Problem parsing JSON payload",e);
