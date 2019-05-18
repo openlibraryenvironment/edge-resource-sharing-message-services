@@ -1,4 +1,4 @@
-package com.k_int.rs.server;
+package com.k_int.rs;
 
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
@@ -11,19 +11,26 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct
 
 @RestController
-public class Iso18626Controller {
+public class WelcomeController {
 
-  private final Logger logger = LoggerFactory.getLogger(Iso18626Controller.class);
+  private final Logger logger = LoggerFactory.getLogger(WelcomeController.class);
 
   @PostConstruct
   public void init() {
-    logger.info("Iso18626Controller::init");
+    logger.info("WelcomeController::init");
   }
 
-  @RequestMapping('/iso18626')
-  public String iso18626() {
-    logger.debug('Iso18626Controller::isoResponse');
+  @GetMapping('/')
+  public String index() {
+    logger.debug('WelcomeController::index');
     return 'Hello'
+  }
+
+
+  @GetMapping('/welcome')
+  public String welcome() {
+    logger.debug('WelcomeController::welcome');
+    return 'Welcome'
   }
 
 }

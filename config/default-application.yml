@@ -5,3 +5,23 @@ resourcesharing:
     hostname: localhost
     username: rsms
     password: rsms
+
+server:
+    contextPath: /
+    port: 8081
+    undertow:
+        accesslog:
+            enabled: true
+            dir: logs
+            pattern: combined
+    compression:
+        enabled: true
+        min-response-size: 1
+
+management:
+    port: 2113
+    context-path: /actuator
+
+logging.level.org.springframework.web: DEBUG
+logging.level.com.k_int: DEBUG
+logging.level.org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE

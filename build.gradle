@@ -10,7 +10,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.10.RELEASE'
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.5.RELEASE")
     classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2'
     classpath "com.netflix.nebula:gradle-ospackage-plugin:5.3.0"
   }
@@ -33,11 +33,17 @@ repositories {
 
 dependencies {
 
-  compile group: 'log4j', name: 'log4j', version: '1.2.5'
-  compile group: 'com.k_int', name: 'A2J', version: '1.0.2'
-  compile group: 'com.k_int', name: 'iso10161', version: '1.0.1'
-  compile group: 'org.codehaus.groovy', name:'groovy-all', version:'2.4.10'
+  compile ('com.k_int:A2J:1.0.2') {
+    exclude group:'log4j', module:'log4j'
+  }
+  compile ('com.k_int:iso10161:1.0.1') {
+    exclude group:'log4j', module:'log4j'
+  }
+  compile group: 'org.codehaus.groovy', name:'groovy-all', version:'2.5.7'
   compile group: 'org.springframework.boot', name:'spring-boot-starter', version: '2.1.5.RELEASE'
+  compile group: 'org.springframework.boot', name:'spring-boot-starter-json', version: '2.1.5.RELEASE'
+  compile group: 'org.springframework', name:'spring-web', version: '5.1.6.RELEASE'
+  compile group: 'org.springframework', name:'spring-webmvc', version: '5.1.6.RELEASE'
   compile group: 'org.springframework.boot', name:'spring-boot-starter-amqp', version: '2.1.5.RELEASE'
   compile group: 'org.springframework.boot', name:'spring-boot-starter-undertow', version: '2.1.5.RELEASE'
   compile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
@@ -46,7 +52,6 @@ dependencies {
   testCompile 'junit:junit:4.12'
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
   testCompile 'org.springframework.boot:spring-boot-starter-test:2.1.4.RELEASE'
-  testCompile 'org.springframework.boot:spring-boot-starter-undertow:2.1.5.RELEASE'
 }
 
 

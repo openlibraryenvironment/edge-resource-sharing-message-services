@@ -2,18 +2,21 @@ package com.k_int.rsms;
 
 import spock.lang.Specification
 import spock.lang.Unroll
+import com.k_int.rs.server.RSServer
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.k_int.rs.server.RSServer
+
 
 import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.test.context.web.WebAppConfiguration;
+
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 
 // @TestPropertySource( locations = "classpath:application-integrationtest.properties")
 
@@ -30,11 +33,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * to do all necessary config
  */
 @RunWith(SpringRunner.class)
-@WebAppConfiguration
-@SpringBootTest( classes = RSServer.class)
+@SpringBootTest(classes = RSServer.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class TestResourceSharingMessageService  extends Specification {
 
-  final static Logger logger = LoggerFactory.getLogger(TestResourceSharingMessageService.class);
+  final static Logger log = LoggerFactory.getLogger(TestResourceSharingMessageService.class);
+
+  @LocalServerPort
+  private int test_port;
 
   /**
    *  Mock responder will listen for events acting as symbols ILLTEST-local-001 and ILLTEST-local-002
@@ -68,13 +73,13 @@ class TestResourceSharingMessageService  extends Specification {
     def new_tgq = 'TESTCASE001'+java.util.UUID.randomUUID().toString();
 
     setup:
-      logger.debug("get hold of outbound message queue");
+      log.debug("get hold of outbound message queue");
       // Tell the mock responders
       mock_responder.setExpectedTGQ(new_tgq)
       mock_responder.waitForMockResponder();
       
     when:
-      logger.debug("sending request 001 to ILLTEST-local-002");
+      log.debug("sending request 001 to ILLTEST-local-002");
       def request = [
         header:[
           protocol:'TCP',
@@ -123,14 +128,14 @@ class TestResourceSharingMessageService  extends Specification {
       ]
 
       def outbound_json = new groovy.json.JsonBuilder(request).toString();
-      logger.debug("Enqueue outbound ISO ILL message via TCP ::\n${outbound_json}");
+      log.debug("Enqueue outbound ISO ILL message via TCP ::\n${outbound_json}");
 
 
       // Put our request on the outbound message queue
       rabbitTemplate.convertAndSend('RSExchange', 'RSOutViaProtocol.TCP', outbound_json );
 
     then:
-      logger.debug("Waiting for auto-responder conversations to complete");
+      log.debug("Waiting for auto-responder conversations to complete");
       def result = mock_responder.waitForConversationToComplete();
 
     expect:
@@ -140,20 +145,20 @@ class TestResourceSharingMessageService  extends Specification {
   @Test
   public void testSendISO18626Request() {
     setup:
-      logger.debug("get hold of outbound message queue");
+      log.debug("get hold of outbound message queue");
 
     when:
-     logger.debug("sending request 001 to ILLTEST-local-002");
+     log.debug("sending request 001 to ILLTEST-local-002");
       def request = [
         header:[
-          address:'http://localhost:8080/iso18626',
+          address:'http://localhost:'+test_port+'/iso18626',
         ],
         message:[
           titie:'wibble'
         ]
       ]
       def outbound_json = new groovy.json.JsonBuilder(request).toString();
-      logger.debug("Enqueue outbound ISO18626 message via HTTPS ::\n${outbound_json}");
+      log.debug("Enqueue outbound ISO18626 message via HTTPS ::\n${outbound_json}");
 
 
       // Put our request on the outbound message queue
@@ -161,7 +166,7 @@ class TestResourceSharingMessageService  extends Specification {
 
     then:
       Thread.sleep(2000);
-      logger.debug("Waiting for auto-responder conversations to complete");
+      log.debug("Waiting for auto-responder conversations to complete");
       // def result = mock_responder.waitForConversationToComplete();
       def result = true;
 

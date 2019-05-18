@@ -150,7 +150,11 @@ This project is built using gradle 5.2.1, YMMV with other versions so please use
 
 The gradle file uses the spring boot plugin to build a single jar consisting of all dependencies. The following command will launch the server:
 
-    java -jar build/libs/resource-sharing-message-services-1.0.jar
+    java -jar build/libs/ki-rsms-1.0.1.jar
+
+Or override the config with something like
+
+    java -jar ./build/libs/ki-rsms-1.0.1.jar --spring.config.name=default-application
 
 ## Local maven repo
 
