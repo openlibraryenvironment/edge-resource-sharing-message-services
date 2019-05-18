@@ -41,6 +41,9 @@ dependencies {
   compile group: 'org.springframework.boot', name:'spring-boot-starter-amqp', version: '2.1.5.RELEASE'
   compile group: 'org.springframework.boot', name:'spring-boot-starter-undertow', version: '2.1.5.RELEASE'
   compile group: 'org.codehaus.groovy.modules.http-builder', name: 'http-builder', version: '0.7.1'
+  compile 'org.springframework.boot:spring-boot-starter-json:2.1.5.RELEASE'
+  compile 'org.springframework:spring-web:4.3.24.RELEASE'
+  compile 'org.springframework:spring-webmvc:4.3.24.RELEASE'
 
 
   testCompile 'junit:junit:4.12'
