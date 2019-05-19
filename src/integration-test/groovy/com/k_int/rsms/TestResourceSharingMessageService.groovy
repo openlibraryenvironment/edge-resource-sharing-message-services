@@ -154,10 +154,11 @@ class TestResourceSharingMessageService  extends Specification {
         ],
         message:[
           request:[
-            header:[
-            ],
+            header:[:],
             bibliographicInfo:[
-              title:'A title'
+              title:'A title',
+              subtitle:'A subtitle',
+              author:'The Author'
             ]
           ]
         ]

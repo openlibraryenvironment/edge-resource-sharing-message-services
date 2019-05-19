@@ -3,10 +3,17 @@ package org.olf.reshare.iso18626;
 import org.olf.reshare.iso18626.schema.*;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ISO18626DataBinder {
 
+  final static Logger logger = LoggerFactory.getLogger(ISO18626DataBinder.class);
+
+
   public static ISO18626Message toXML(Map message_data) {
+
+    logger.debug("ISO18626DataBinder::toXML");
 
     ISO18626Message result = new ISO18626Message()
 
@@ -22,29 +29,20 @@ public class ISO18626DataBinder {
   }
 
   public static Request bindRequest(Map message_data) {
-    Request result = new Request()
-    if ( message_data.header ) { result.setHeader( bindHeader(message_data.header) ) }
-    if ( message_data.bibliographic_info ) { result.setBibliographicInfo( bindBibliographicInfo(message_data.bibliographic_info) ) }
-    return result;
+    return bindUsing(new Request(), message_data,
+      [ [ member:'header', binder:'bindHeader' ],
+        [ member:'bibliographicInfo', binder:'bindBibliographicInfo' ] ] )
   }
 
   public static Header bindHeader(Map message_data) {
-    Header result = new Header();
-
-
-    [ [ member:'supplyingAgencyId', binder:'bindTypeAgencyId' ],
-      [ member:'requestingAgencyId', binder:'bindTypeAgencyId' ],
-      [ member:'multipleItemRequestId', binder:'bindString' ],
-      [ member:'timestamp', binder:'bindXMLGregorianCalendar' ],
-      [ member:'requestingAgencyRequestId', binder:'bindString' ],
-      [ member:'supplyingAgencyRequestId', binder:'bindString' ],
-      [ member:'requestingAgencyAuthentication', binder:'bindRequestingAgencyAuthentication' ] ].each { member ->
-      if ( message_data[member] != null ) {
-        result."set${member.capitalize()}"(this."bind${member.capitalize()}"(message_data[member]));
-      }
-    }
-
-    return result;
+    return bindUsing(new Header(), message_data,
+      [ [ member:'supplyingAgencyId', binder:'bindTypeAgencyId' ],
+        [ member:'requestingAgencyId', binder:'bindTypeAgencyId' ],
+        [ member:'multipleItemRequestId', binder:'bindString' ],
+        [ member:'timestamp', binder:'bindXMLGregorianCalendar' ],
+        [ member:'requestingAgencyRequestId', binder:'bindString' ],
+        [ member:'supplyingAgencyRequestId', binder:'bindString' ],
+        [ member:'requestingAgencyAuthentication', binder:'bindRequestingAgencyAuthentication' ] ] );
   }
 
   public static TypeAgencyId bindTypeAgencyId(Map message_data) {
@@ -63,14 +61,47 @@ public class ISO18626DataBinder {
   }
 
   public static BibliographicInfo bindBibliographicInfo(Map message_data) {
-    BibliographicInfo result = new BibliographicInfo();
-    return result;
+    return bindUsing(new BibliographicInfo(), message_data,
+        [ [ member:"supplierUniqueRecordId", binder: 'bindString' ],
+          [ member:"title", binder:'bindString' ],
+          [ member:"author", binder:'bindString' ],
+          [ member:"subtitle", binder:'bindString' ],
+          [ member:"seriesTitle", binder:'bindString' ],
+          [ member:"edition", binder:'bindString' ],
+          [ member:"titleOfComponent", binder:'bindString' ],
+          [ member:"authorOfComponent", binder:'bindString' ],
+          [ member:"volume", binder:'bindString' ],
+          [ member:"issue", binder:'bindString' ],
+          [ member:"pagesRequested", binder:'bindString' ],
+          [ member:"estimatedNoPages", binder:'bindString' ],
+          [ member:"bibliographicItemId", binder:'bindString' ],
+          [ member:"sponsor", binder:'bindString' ],
+          [ member:"informationSource", binder:'bindString' ],
+          [ member:"bibliographicRecordId", binder:'bindString' ] ] )
+  }
+
+
+  public static Object bindUsing(target,message_data,cfg) {
+    logger.debug("bindUsing... ${target.class.name} ${message_data}");
+    cfg.each { member_cfg ->
+      Object message_data_value = message_data[member_cfg.member];
+      logger.debug("consider ${member_cfg.member}=${message_data_value}");
+      if ( message_data_value != null ) {
+        logger.debug("Adding...");
+        if ( member_cfg.setter != null ) {
+          target."${member_cfg.setter}"(this."${member_cfg.binder}"(message_data_value));
+        }
+        else {
+          target."set${member_cfg.member.capitalize()}"(this."${member_cfg.binder}"(message_data_value));
+        }
+      }
+    }
+
+    return target;
   }
 
   public static String bindString(String string) {
     return string;
   }
   
-
-
 }
