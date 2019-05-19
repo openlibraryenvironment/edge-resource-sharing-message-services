@@ -6,5 +6,5 @@ resourcesharing:
     username: adm
     password: admpass
 
-server:
-    port: 8083
+# server:
+#     port: 8083

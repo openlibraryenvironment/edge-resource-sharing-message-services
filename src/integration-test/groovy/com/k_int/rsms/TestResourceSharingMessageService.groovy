@@ -10,10 +10,12 @@ import org.junit.runner.RunWith;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 // @TestPropertySource( locations = "classpath:application-integrationtest.properties")
 
@@ -30,8 +32,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * to do all necessary config
  */
 @RunWith(SpringRunner.class)
-@WebAppConfiguration
-@SpringBootTest( classes = RSServer.class)
+@SpringBootTest( classes = RSServer.class, webEnvironment=WebEnvironment.RANDOM_PORT)
 class TestResourceSharingMessageService  extends Specification {
 
   final static Logger logger = LoggerFactory.getLogger(TestResourceSharingMessageService.class);
@@ -45,6 +46,9 @@ class TestResourceSharingMessageService  extends Specification {
 
   @Autowired
   private RabbitTemplate rabbitTemplate;
+
+  @Value('${local.server.port}')
+  int local_server_port;
 
   /**
    * test injection of values from integration-test/resources/application.yml
@@ -146,7 +150,7 @@ class TestResourceSharingMessageService  extends Specification {
      logger.debug("sending request 001 to ILLTEST-local-002");
       def request = [
         header:[
-          address:'http://localhost:8080/iso18626',
+          address:'http://localhost:'+local_server_port+'/iso18626',
         ],
         message:[
           titie:'wibble'
