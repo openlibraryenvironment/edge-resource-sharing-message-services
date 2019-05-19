@@ -5,10 +5,16 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.annotation.PostConstruct
+import javax.xml.bind.JAXBContext
+import javax.xml.bind.Marshaller
+
 import groovy.json.JsonSlurper
 
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
+
+import org.olf.reshare.iso18626.ISO18626DataBinder;
+import org.olf.reshare.iso18626.schema.ISO18626Message;
 
 /**
  *
@@ -32,6 +38,19 @@ public class Iso18626Sender implements RSMessageSender {
       logger.debug("Send ISO18626 message to ${message_header?.address}");
 
       HTTPBuilder http = new HTTPBuilder(message_header.address)
+
+      ISO18626Message message = ISO18626DataBinder.toXML(message_payload);
+
+      try {
+        StringWriter writer = new StringWriter();
+        JAXBContext ctx = JAXBContext.newInstance(ISO18626Message.class);
+        Marshaller marshaller = ctx.createMarshaller();
+        marshaller.marshal(message, writer);
+        logger.debug("XML payload will be: ${writer.toString()}");
+      }
+      catch ( Exception e ) {
+        logger.error("problem marshalling XML",e);
+      }
 
       http.request(Method.GET) { req ->
 

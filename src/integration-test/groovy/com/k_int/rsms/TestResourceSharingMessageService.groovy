@@ -153,7 +153,13 @@ class TestResourceSharingMessageService  extends Specification {
           address:'http://localhost:'+local_server_port+'/iso18626',
         ],
         message:[
-          titie:'wibble'
+          request:[
+            header:[
+            ],
+            bibliographicInfo:[
+              title:'A title'
+            ]
+          ]
         ]
       ]
       def outbound_json = new groovy.json.JsonBuilder(request).toString();
