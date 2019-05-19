@@ -12,6 +12,7 @@ import groovy.json.JsonSlurper
 
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
+import groovyx.net.http.ContentType
 
 import org.olf.reshare.iso18626.ISO18626DataBinder;
 import org.olf.reshare.iso18626.schema.ISO18626Message;
@@ -45,25 +46,30 @@ public class Iso18626Sender implements RSMessageSender {
         StringWriter writer = new StringWriter();
         JAXBContext ctx = JAXBContext.newInstance(ISO18626Message.class);
         Marshaller marshaller = ctx.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
         marshaller.marshal(message, writer);
-        logger.debug("XML payload will be: ${writer.toString()}");
+        String message_as_xml = writer.toString()
+        logger.debug("XML payload will be: ${message_as_xml}");
+
+        http.request(Method.POST, ContentType.XML) { req ->
+
+          // uri.query = ['param':'value']
+          // body = message_as_xml
+          requestContentType=ContentType.XML
+          body = message_as_xml
+
+          response.success = { resp, reader ->
+            logger.debug("ISO18626 call Got HTTP response: ${resp.status} ${reader}");
+          }
+
+          response.failure = { resp ->
+            logger.warn("ISO18626 call failed: ${resp.status}");
+          }
+
+        }
       }
       catch ( Exception e ) {
         logger.error("problem marshalling XML",e);
-      }
-
-      http.request(Method.GET) { req ->
-
-        uri.query = ['param':'value']
-
-        response.success = { resp, reader ->
-          logger.debug("ISO18626 call Got HTTP response: ${resp.status} ${reader}");
-        }
-
-        response.failure = { resp ->
-          logger.warn("ISO18626 call failed: ${resp.status}");
-        }
-
       }
     }
     else {
