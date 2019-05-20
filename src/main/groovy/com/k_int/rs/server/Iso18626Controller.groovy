@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import org.olf.reshare.iso18626.ISO18626ToJsonDataBinder;
+
 // See https://docs.spring.io/spring-boot/docs/current/reference/html/howto-spring-mvc.html
 // also https://www.baeldung.com/spring-request-response-body
 // https://stackoverflow.com/questions/44556382/how-to-unmarshall-xml-from-http-post-rest-web-service-with-jaxb-using-spring-mvc
@@ -29,6 +31,8 @@ public class Iso18626Controller {
   public String isoResponse(HttpServletRequest request,
                             @RequestBody ISO18626Message iso_18626_message) {
     logger.debug("Iso18626Controller::isoResponse ${request} ${iso_18626_message} ");
+    Map message_data = ISO18626ToJsonDataBinder.toJSON(iso_18626_message);
+    logger.debug("As JSON ${message_data}");
     return '<result>Some xml</result>'
   }
 

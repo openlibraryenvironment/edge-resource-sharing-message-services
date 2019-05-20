@@ -184,4 +184,7 @@ task buildDeb(type: Deb) {
 }
 
 check.dependsOn integrationTest
-compileJava.dependsOn xjc
+
+// Commented this out - do not regenerate the XML parser every build as it updates a datestamp that will cause
+// churn in git. Uncomment this if you think the schema has changed, or if you deliberately change the 
+// compileJava.dependsOn xjc
