@@ -90,12 +90,12 @@ public class ISO18626DataBinder {
 
 
   public static Object bindUsing(target,message_data,cfg) {
-    logger.debug("bindUsing... ${target.class.name} ${message_data}");
+    // logger.debug("bindUsing... ${target.class.name} ${message_data}");
     cfg.each { member_cfg ->
       Object message_data_value = message_data[member_cfg.member];
-      logger.debug("consider ${member_cfg.member}=${message_data_value}");
+      // logger.debug("consider ${member_cfg.member}=${message_data_value}");
       if ( message_data_value != null ) {
-        logger.debug("Adding...");
+        // logger.debug("Adding...");
         if ( member_cfg.setter != null ) {
           target."${member_cfg.setter}"(this."${member_cfg.binder}"(message_data_value));
         }

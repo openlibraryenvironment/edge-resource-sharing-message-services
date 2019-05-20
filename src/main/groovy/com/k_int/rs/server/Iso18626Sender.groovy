@@ -49,7 +49,7 @@ public class Iso18626Sender implements RSMessageSender {
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
         marshaller.marshal(message, writer);
         String message_as_xml = writer.toString()
-        logger.debug("XML payload will be: ${message_as_xml}");
+        // logger.debug("XML payload will be: ${message_as_xml}");
 
         http.request(Method.POST, ContentType.XML) { req ->
 

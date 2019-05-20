@@ -49,6 +49,7 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
     try {
       def jsonSlurper = new JsonSlurper()
       def parsed_message = jsonSlurper.parseText(json_payload_as_string)
+      // logger.debug("Parsed json: ${parsed_message}");
 
       def senders = applicationContext.getBeansOfType(com.k_int.rs.server.RSMessageSender.class);
 
@@ -61,21 +62,19 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
         // Figure out if anyone supports the transport protocol defined
         com.k_int.rs.server.RSMessageSender selected_sender = null;
         senders.each { k,v ->
-          logger.debug("current protocol ${v.getProtocol()} == requested protocol ${parsed_message.header.protocol} ?");
+          // logger.debug("current protocol ${v.getProtocol()} == requested protocol ${parsed_message.header.protocol} ?");
           if ( v.getProtocol().equals(protocol) ) {
-            logger.debug("Matched");
+            // logger.debug("Matched");
             selected_sender = v;
           }
         }
 
         // If so, call send
         if ( selected_sender ) {
-          logger.debug("Calling send on selected sender");
+          logger.debug("onMessage identified a handler for outgoing message with routing key ${routing_key}. Call the selcted_sender.send");
           selected_sender.send(parsed_message.header, parsed_message.message);
         }
 
-        logger.debug("RabbitAdapter::receiveMessage()");
-        logger.debug("Parsed json: ${parsed_message}");
       }
       else {
         log.error("Unexpected routing key ${routing_key}");
@@ -85,7 +84,7 @@ public class RabbitAdapter implements ApplicationContextAware, MessageListener {
       logger.error("Problem parsing JSON payload",e);
     }
     finally {
-      logger.debug('RabbitAdapter::receiveMessage complete');
+      logger.debug('RabbitAdapter::onMessage complete');
     }
   }
 

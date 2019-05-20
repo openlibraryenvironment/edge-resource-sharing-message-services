@@ -59,7 +59,15 @@ public class ISO18626ToJsonDataBinder {
   }
 
   public static Map bindTypeAgencyId(TypeAgencyId message_data) {
-    return [:];
+    return bindUsing([:], message_data,
+      [ [ member:'agencyIdType', binder:'bindTypeSchemeValuePair' ],
+        [ member:'agencyIdValue', binder:'bindString' ] ])
+  }
+
+  public static Map bindTypeSchemeValuePair(TypeSchemeValuePair message_data) {
+    return bindUsing([:], message_data,
+      [ [ member:'value', binder:'bindString' ],
+        [ member:'scheme', binder:'bindString' ] ])
   }
 
   public static Map bindRequestingAgencyAuthentication(RequestingAgencyAuthentication message_data) {
@@ -119,7 +127,7 @@ public class ISO18626ToJsonDataBinder {
     cfg.each { member_cfg ->
       Object message_data_value = message_data."${member_cfg.member}"
       if ( message_data_value != null ) {
-        logger.debug("Adding ${member_cfg.member} with value ${message_data_value} using binder ${member_cfg.binder}");
+        // logger.debug("Adding ${member_cfg.member} with value ${message_data_value} using binder ${member_cfg.binder}");
         target[member_cfg.member] = this."${member_cfg.binder}"(message_data_value);
       }
       else {
