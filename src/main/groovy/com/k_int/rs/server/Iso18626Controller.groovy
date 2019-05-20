@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.http.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.olf.reshare.iso18626.schema.ISO18626Message;
+import org.olf.reshare.iso18626.schema.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,12 +28,31 @@ public class Iso18626Controller {
   private final Logger logger = LoggerFactory.getLogger(IsoIllTcpSender.class);
 
   @RequestMapping(value='/iso18626', method=RequestMethod.POST, consumes=MediaType.APPLICATION_XML_VALUE)
-  public String isoResponse(HttpServletRequest request,
+  public ISO18626Message isoResponse(HttpServletRequest request,
                             @RequestBody ISO18626Message iso_18626_message) {
     logger.debug("Iso18626Controller::isoResponse ${request} ${iso_18626_message} ");
     Map message_data = ISO18626ToJsonDataBinder.toJSON(iso_18626_message);
+
     logger.debug("As JSON ${message_data}");
-    return '<result>Some xml</result>'
+    return generateConfirmation(iso_18626_message);
   }
 
+  public ISO18626Message generateConfirmation(ISO18626Message request) {
+    ISO18626Message result = new ISO18626Message();
+    result.setVersion("1.2");
+
+    if ( request.getRequest() != null ) {
+      result.setRequestConfirmation(generateRequestConfirmation(request));
+    }
+    else {
+      // ERROR
+    }
+
+    return result;
+  }
+
+  private RequestConfirmation generateRequestConfirmation(ISO18626Message request) {
+    RequestConfirmation result =  new RequestConfirmation()
+    return result;
+  }
 }

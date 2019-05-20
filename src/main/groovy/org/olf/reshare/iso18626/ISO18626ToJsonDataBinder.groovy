@@ -115,7 +115,7 @@ public class ISO18626ToJsonDataBinder {
   }
 
   public static Object bindUsing(Map target, Object message_data, List cfg) {
-    logger.debug("bindUsing... ${message_data.class.name} ${message_data}");
+    // logger.debug("bindUsing... ${message_data.class.name} ${message_data}");
     cfg.each { member_cfg ->
       Object message_data_value = message_data."${member_cfg.member}"
       if ( message_data_value != null ) {
@@ -123,11 +123,10 @@ public class ISO18626ToJsonDataBinder {
         target[member_cfg.member] = this."${member_cfg.binder}"(message_data_value);
       }
       else {
-        logger.debug("Skip ${member_cfg.member}");
+        // logger.debug("Skip ${member_cfg.member}");
       }
     }
 
-    logger.debug("exit bindUsing");
     return target;
   }
 

@@ -58,8 +58,11 @@ public class Iso18626Sender implements RSMessageSender {
           requestContentType=ContentType.XML
           body = message_as_xml
 
-          response.success = { resp, reader ->
-            logger.debug("ISO18626 call Got HTTP response: ${resp.status} ${reader}");
+          response.success = { resp, xml ->
+            // resp.headers.each { h -> logger.debug("${h}"); }
+            logger.debug("ISO18626 call Got HTTP response: ${resp.status}");
+            // HTTPBuilder will parse the incoming XML and give us a GPath object that lets us navigate the response
+            logger.debug(xml?.name());
           }
 
           response.failure = { resp ->

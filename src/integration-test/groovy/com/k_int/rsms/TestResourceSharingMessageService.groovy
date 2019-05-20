@@ -143,6 +143,9 @@ class TestResourceSharingMessageService  extends Specification {
 
   @Test
   public void testSendISO18626Request() {
+
+    def new_tgq = 'TESTCASE002'+java.util.UUID.randomUUID().toString();
+
     setup:
       logger.debug("get hold of outbound message queue");
 
@@ -154,7 +157,23 @@ class TestResourceSharingMessageService  extends Specification {
         ],
         message:[
           request:[
-            header:[:],
+            header:[
+              requestingAgencyId:[
+                agencyIdType:[
+                  value:'RESHARE',
+                  scheme:'http://a.b.c.d/path'
+                ],
+                agencyIdValue:'DIKUA',
+              ],
+              supplyingAgencyId:[
+                agencyIdType:[
+                  value:'RESHARE',
+                  scheme:'http://a.b.c.d/path'
+                ],
+                agencyIdValue:'DIKUB',
+              ],
+              requestingAgencyRequestId:new_tgq
+            ],
             bibliographicInfo:[
               title:'A title',
               subtitle:'A subtitle',

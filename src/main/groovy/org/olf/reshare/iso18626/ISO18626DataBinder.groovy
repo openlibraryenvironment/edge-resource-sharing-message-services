@@ -46,9 +46,17 @@ public class ISO18626DataBinder {
   }
 
   public static TypeAgencyId bindTypeAgencyId(Map message_data) {
-    TypeAgencyId result = new TypeAgencyId();
-    return result;
+    return bindUsing(new TypeAgencyId(), message_data,
+      [ [ member:'agencyIdType', binder:'bindTypeSchemeValuePair' ],
+        [ member:'agencyIdValue', binder:'bindString' ] ] );
   }
+
+  public static TypeSchemeValuePair bindTypeSchemeValuePair(Map message_data) {
+    return bindUsing(new TypeSchemeValuePair(), message_data,
+      [ [ member:'value', binder:'bindString' ],
+        [ member:'scheme', binder:'bindString' ] ] );
+  }
+
 
   public static XMLGregorianCalendar bindXMLGregorianCalendar(Map message_data) {
     XMLGregorianCalendar result = DatatypeFactory.newXMLGregorianCalendar() // newXMLGregorianCalendarDate(int year, int month, int day, int timezone)
