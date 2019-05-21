@@ -14,7 +14,7 @@ import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 import groovyx.net.http.ContentType
 
-import org.olf.reshare.iso18626.ISO18626DataBinder;
+import org.olf.reshare.iso18626.CanonicalMapToISO18626DataBinder;
 import org.olf.reshare.iso18626.schema.ISO18626Message;
 
 /**
@@ -40,7 +40,7 @@ public class Iso18626Sender implements RSMessageSender {
 
       HTTPBuilder http = new HTTPBuilder(message_header.address)
 
-      ISO18626Message message = ISO18626DataBinder.toXML(message_payload);
+      ISO18626Message message = CanonicalMapToISO18626DataBinder.toPOJO(message_payload);
 
       try {
         StringWriter writer = new StringWriter();
@@ -76,7 +76,7 @@ public class Iso18626Sender implements RSMessageSender {
       }
     }
     else {
-      logger.error("NO address in message payload header");
+      logger.error("NO address in message payload header ${message_header}");
     }
   }
 
