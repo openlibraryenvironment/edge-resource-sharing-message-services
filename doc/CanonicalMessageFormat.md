@@ -6,6 +6,8 @@ contextual structure as follows:
         header:{
           Delivery information and any other supplimentary information in here Most often
           address:"Perhaps a URL, perhaps an IP Address"
+          When notifying mod-rs of an incoming message
+          toSymbol:"The intended recipient symbol"
         }
         message:{
           The actual protcol message goes in here, for example request { for a request message.

@@ -53,7 +53,14 @@ public class Iso18626Controller {
       logger.debug("Enqueue message for recipient symbol ${message_recipient_symbol}");
       // rabbitTemplate.convertAndSend('RSExchange', 'RSInboundMessage.ISO18626.'+message_recipient_symbol, message_data);
 
-      String encoded_json = JsonOutput.toJson(message_data);
+      def wrapped_message = [
+        header: [
+          toSymbol:message_recipient_symbol
+        ],
+        message: message_data
+      ]
+
+      String encoded_json = JsonOutput.toJson(wrapped_message);
 
       Message message = MessageBuilder
                             .withBody(encoded_json.getBytes())
