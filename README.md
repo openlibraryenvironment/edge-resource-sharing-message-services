@@ -16,7 +16,7 @@ This will run integration tests and create an executable jar file
 
 From the root of the project run
 
-    java -jar ./build/libs/ki-rsms-1.0.1.jar --spring.config.name=default-application
+    java -jar ./build/libs/edge-rs-message-services-1.0.1.jar --spring.config.name=default-application
 
 This will start up the executable jar file and identifies the file config/application-default.yml as the source of config information. After running this command
 the edge module is listening on the configured ports for inbound connection oriented ISO 10161 and ISO18626. It is also listening on the queues for requests

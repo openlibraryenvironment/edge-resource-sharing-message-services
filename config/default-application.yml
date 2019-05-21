@@ -5,3 +5,13 @@ resourcesharing:
     hostname: localhost
     username: rsms
     password: rsms
+
+logging:
+  level:
+    root: WARN
+    org.springframework.web: ERROR
+    com.howtodoinjava: DEBUG
+    org.hibernate: ERROR
+    org.olf: DEBUG
+    com.k_int: DEBUG
+

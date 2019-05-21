@@ -73,7 +73,7 @@ jar {
                    'Implementation-Version': version,
                                'Main-Class': 'com.k_int.rs.server.RSServer'
     }
-    baseName = 'ki-rsms'
+    baseName = 'edge-rs-message-services'
     // version =  '0.1.0'
 }
 

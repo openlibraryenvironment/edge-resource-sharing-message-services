@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.olf.reshare.iso18626.ISO18626ToJsonDataBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import groovy.json.JsonOutput;
 
 
 // See https://docs.spring.io/spring-boot/docs/current/reference/html/howto-spring-mvc.html
@@ -40,7 +44,6 @@ public class Iso18626Controller {
                             @RequestBody ISO18626Message iso_18626_message) {
     logger.debug("Iso18626Controller::isoResponse ${request} ${iso_18626_message} ");
     Map message_data = ISO18626ToJsonDataBinder.toJSON(iso_18626_message);
-    // logger.debug("As JSON ${message_data}");
     ISO18626Message result = null;
 
     String message_recipient_symbol = resolveRecipient(message_data);
@@ -48,8 +51,18 @@ public class Iso18626Controller {
     if ( message_recipient_symbol ) {
       // Generate an error confirmation
       logger.debug("Enqueue message for recipient symbol ${message_recipient_symbol}");
+      // rabbitTemplate.convertAndSend('RSExchange', 'RSInboundMessage.ISO18626.'+message_recipient_symbol, message_data);
+
+      String encoded_json = JsonOutput.toJson(message_data);
+
+      Message message = MessageBuilder
+                            .withBody(encoded_json.getBytes())
+                            .setContentType(MessageProperties.CONTENT_TYPE_JSON)
+                            .build();
+
+      rabbitTemplate.convertAndSend('RSExchange', 'RSInboundMessage.ISO18626.'+message_recipient_symbol, message);
+
       result = generateConfirmation(iso_18626_message);
-      rabbitTemplate.convertAndSend('RSExchange', 'RSInboundMessage.ISO18626.'+message_recipient_symbol, message_data);
     }
     else {
       logger.error("Unable to resolve tenant based on message payload");
