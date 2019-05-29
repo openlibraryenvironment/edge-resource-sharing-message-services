@@ -1,5 +1,8 @@
 # Default application.yml
 
+server:
+  port: 8079
+
 resourcesharing:
   rabbit:
     hostname: localhost

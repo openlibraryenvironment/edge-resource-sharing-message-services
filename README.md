@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-You need a rabbitMQ running with a user rsms/rsms with permissions to create queues
+You need a rabbitMQ running with a user rsms/rsms with permissions to create queues. The mod-rs vagrant image can provide this for you.
 
 ## Build
 

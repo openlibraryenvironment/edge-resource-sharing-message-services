@@ -148,6 +148,7 @@ class TestResourceSharingMessageService  extends Specification {
 
     setup:
       logger.debug("get hold of outbound message queue");
+      logger.debug("Send ISO18626 to http://localhost:${local_server_port}/iso18626");
 
     when:
      logger.debug("sending request 001 to ILLTEST-local-002");
