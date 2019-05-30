@@ -1,6 +1,7 @@
 package com.k_int.rs.server
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,19 +9,19 @@ import javax.annotation.PostConstruct
 import javax.xml.bind.JAXBContext
 import javax.xml.bind.Marshaller
 import javax.xml.bind.Unmarshaller
-
 import groovy.json.JsonSlurper
-
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 import groovyx.net.http.ContentType
-
 import org.olf.reshare.iso18626.CanonicalMapToISO18626DataBinder;
 import org.olf.reshare.iso18626.ISO18626ToJsonDataBinder;
-
 import org.olf.reshare.iso18626.schema.ISO18626Message;
-
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import groovy.json.JsonOutput;
+
 
 
 /**
@@ -36,6 +37,12 @@ public class Iso18626Sender implements RSMessageSender {
 
   // Inject the rabbit template to send a ProcessorResponse with the acknowledgement or otherwise
   private RabbitTemplate rabbitTemplate;
+
+  @Autowired
+  public Iso18626Sender(RabbitTemplate rabbitTemplate) {
+    this.rabbitTemplate = rabbitTemplate;
+  }
+
 
   @PostConstruct
   public void init() {
@@ -89,7 +96,9 @@ public class Iso18626Sender implements RSMessageSender {
             Unmarshaller u = ctx.createUnmarshaller();
             ISO18626Message response_msg = u.unmarshal(new ByteArrayInputStream(txt.getBytes()))
 
-            logger.debug("Got response msg ${response_msg}")
+            logger.debug("Got response msg ${response_msg}, sending processor response to mod-rs")
+            sendProcessorResponse(response_msg)
+
           }
 
           response.failure = { resp ->
@@ -109,5 +118,32 @@ public class Iso18626Sender implements RSMessageSender {
 
   public String getProtocol() {
     return PROTOCOL;
+  }
+
+
+  private void sendProcessorResponse(ISO18626Message response_msg) {
+
+    logger.debug("Sending processor response message");
+
+    def response_as_json = ISO18626ToJsonDataBinder.toJSON(response_msg);
+
+    def wrapped_message = [
+      processorResponse:[
+        status:'OK',
+        patronRequestId:null,
+        protocolResponseMessage:response_as_json
+      ]
+    ]
+
+    String encoded_json = JsonOutput.toJson(wrapped_message);
+
+    Message message = MessageBuilder
+                            .withBody(encoded_json.getBytes())
+                            .setContentType(MessageProperties.CONTENT_TYPE_JSON)
+                            .build();
+
+    rabbitTemplate.convertAndSend('RSExchange', 'ProcessorResponse.TENANT', message);
+
+    logger.debug("ProcessorResponse.TENANT sent");
   }
 }
