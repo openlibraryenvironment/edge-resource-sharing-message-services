@@ -97,7 +97,7 @@ public class Iso18626Sender implements RSMessageSender {
             ISO18626Message response_msg = u.unmarshal(new ByteArrayInputStream(txt.getBytes()))
 
             logger.debug("Got response msg ${response_msg}, sending processor response to mod-rs")
-            sendProcessorResponse(response_msg)
+            sendProcessorResponse(message_header,response_msg)
 
           }
 
@@ -121,7 +121,7 @@ public class Iso18626Sender implements RSMessageSender {
   }
 
 
-  private void sendProcessorResponse(ISO18626Message response_msg) {
+  private void sendProcessorResponse(Map header_data, ISO18626Message response_msg) {
 
     logger.debug("Sending processor response message");
 
@@ -130,7 +130,10 @@ public class Iso18626Sender implements RSMessageSender {
     def wrapped_message = [
       processorResponse:[
         status:'OK',
-        patronRequestId:null,
+        patronRequestId:header_data?.patronRequestId,
+        tenant:header_data?.tenant,
+        action:header_data?.action,
+        result: 'OK',
         protocolResponseMessage:response_as_json
       ]
     ]
