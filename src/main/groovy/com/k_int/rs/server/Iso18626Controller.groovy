@@ -97,6 +97,27 @@ public class Iso18626Controller {
 
   private RequestConfirmation generateRequestConfirmation(ISO18626Message request) {
     RequestConfirmation result =  new RequestConfirmation()
+    result.setConfirmationHeader(generateConfirmationheader(request));
+    // result.setErrorData(generateErrorData(request));
+    return result;
+  }
+
+  private ConfirmationHeader generateConfirmationheader(ISO18626Message request) {
+    ConfirmationHeader result = new ConfirmationHeader();
+    result.setSupplyingAgencyId(null)  // TypeAgencyId
+    result.setRequestingAgencyId(null) // TypeAgencyId
+    result.setTimestamp(null) // XMLGregorianCalendar (Required)
+    result.setRequestingAgencyRequestId(null) // String
+    result.setMultipleItemRequestId(null) // String
+    result.setTimestampReceived(null) // XMLGregorianCalendar (Required)
+    result.setMessageStatus(TypeMessageStatus.OK) // TypeMessageStatus (Required)
+    return result;
+  }
+
+  private ErrorData generateErrorData(ISO18626Message request) {
+    ErrorData result = new ErrorData();
+    result.setErrorType(null) // TypeErrorType (requiired)
+    result.setErrorValue(null) // String
     return result;
   }
 
