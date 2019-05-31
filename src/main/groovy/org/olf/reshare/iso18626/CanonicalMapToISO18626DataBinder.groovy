@@ -85,10 +85,11 @@ public class CanonicalMapToISO18626DataBinder {
           [ member:"issue", binder:'bindString' ],
           [ member:"pagesRequested", binder:'bindString' ],
           [ member:"estimatedNoPages", binder:'bindString' ],
-          [ member:"bibliographicItemId", binder:'bindString' ],
+          [ member:"bibliographicItemId", binder:'bindBibliographicItemIdList', list:'bibliographicItemId' ],
           [ member:"sponsor", binder:'bindString' ],
           [ member:"informationSource", binder:'bindString' ],
-          [ member:"bibliographicRecordId", binder:'bindString' ] ] )
+          [ member:"bibliographicRecordId", binder:'bindBibliographicRecordId', list:'bibliographicRecordId' ] 
+        ] )
   }
 
 
@@ -99,7 +100,10 @@ public class CanonicalMapToISO18626DataBinder {
       // logger.debug("consider ${member_cfg.member}=${message_data_value}");
       if ( message_data_value != null ) {
         // logger.debug("Adding...");
-        if ( member_cfg.setter != null ) {
+        if ( member_cfg.list != null ) {
+          target."${member_cfg.list}".addAll(this."${member_cfg.binder}"(message_data_value));
+        }
+        else if ( member_cfg.setter != null ) {
           target."${member_cfg.setter}"(this."${member_cfg.binder}"(message_data_value));
         }
         else {
@@ -115,4 +119,20 @@ public class CanonicalMapToISO18626DataBinder {
     return string;
   }
   
+  public static Object noopBinder(Object input) {
+    logger.debug("noopBinder - instance of ${input?.class?.name} : ${input}");
+    return null;
+  }
+
+  public static List<BibliographicItemId> bindBibliographicItemIdList(List l) {
+    List<BibliographicItemId> result = []
+    logger.debug("bindBibliographicItemIdList - instance of ${l?.class?.name} : ${l}");
+    return result;
+  }
+
+  public static List<BibliographicRecordId> bindBibliographicRecordId(List l) {
+    List<BibliographicRecordId> result = []
+    logger.debug("bindBibliographicRecordId - instance of ${l?.class?.name} : ${l}");
+    return result;
+  }
 }
