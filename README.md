@@ -144,6 +144,10 @@ This project is built using gradle 5.2.1, YMMV with other versions so please use
 
     ./gradlew build
 
+To build without running integration tests
+
+    ./gradlew jar
+
 # Running
 
 ## Executable jar
