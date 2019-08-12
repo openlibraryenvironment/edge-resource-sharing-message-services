@@ -18,8 +18,24 @@ node {
     sh 'ls build/libs'
     archiveArtifacts artifacts: 'build/libs/ki-rsms*'
   }
-  // step([$class: 'ArtifactArchiver', artifacts: 'build/libs/*.jar', fingerprint: true])
-  // 
-  // stage 'reports'
-  // step([$class: 'JUnitResultArchiver', testResults: 'build/test-results/*.xml'])
+
+  stage ('Package') {
+    if ( env.BRANCH_NAME == null ) {
+      // Assume single branch should be packaged.
+      echo "Single branch pipeline is assumed to require packaging."
+    }
+    if ( env.BRANCH_NAME == null || ['master', 'test'].contains(env.BRANCH_NAME) ) {
+      def jar_files = findFiles glob: 'build/libs/*.jar'
+      echo "${war_files}"
+      if ( jar_files.length == 1 ) {
+        echo "Single file found. ${jar_files[0].name} at ${jar_files[0].path}"
+        openshift.withCluster {
+          openshift.withProject {
+            echo "call packager.startBuild"
+          }
+        }
+      }
+    }
+  }
+
 }
